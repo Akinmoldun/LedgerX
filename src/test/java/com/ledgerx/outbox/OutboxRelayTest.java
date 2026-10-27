@@ -29,7 +29,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 /**
  * Unit tests (§12): the relay publishes to Kafka and ONLY THEN marks the row
  * published; on broker failure it records the failure and never marks it.
- * Week 8 adds the exponential retry backoff (1s → 2s → 4s … capped at 5min).
+ * Week 8 adds the exponential retry backoff (attempts^2 seconds capped at 5min).
  * Time-dependent behaviour is tested by advancing an injected mutable Clock —
  * never with Thread.sleep (§2.3). The real broker arrives via OutboxRelayIT.
  */
@@ -70,7 +70,7 @@ class OutboxRelayTest {
 
     private OutboxRelay relay(AdjustableClock clock) {
         return new OutboxRelay(outbox, kafka, new io.micrometer.core.instrument.simple.SimpleMeterRegistry(),
-                clock, "ledgerx.transfer.posted.v1", 1000L, 300000L);
+                clock, "ledgerx.transfer.posted.v1");
     }
 
     private static OutboxEntry pendingEntry() {
@@ -93,12 +93,12 @@ class OutboxRelayTest {
         InOrder order = inOrder(kafka, outbox);
         order.verify(kafka).send(anyString(), anyString(), anyString());
         order.verify(outbox).markPublished(eq(e.getId()), eq(FIXED));
-        verify(outbox, never()).recordFailure(any(), anyString());
+        verify(outbox, never()).recordFailure(any(), anyString(), any());
         assertThat(outbox).isNotNull();
     }
 
     @Test
-    @DisplayName("broker failure records the failure and never marks the row published")
+    @DisplayName("broker failure records the failure and next_attempt_at, never marks published")
     void brokerFailureRecordsFailure() throws Exception {
         OutboxEntry e = pendingEntry();
         when(outbox.lockNextBatch(50)).thenReturn(List.of(e), List.of());
@@ -109,7 +109,9 @@ class OutboxRelayTest {
 
         relay(new AdjustableClock()).relay();
 
-        verify(outbox).recordFailure(eq(e.getId()), contains("broker unreachable"));
+        // 1st failure (attempts 1): 1^2 = 1 second delay
+        Instant expectedNextAttempt = FIXED.plusSeconds(1);
+        verify(outbox).recordFailure(eq(e.getId()), contains("broker unreachable"), eq(expectedNextAttempt));
         verify(outbox, never()).markPublished(any(), any());
     }
 
@@ -122,23 +124,24 @@ class OutboxRelayTest {
                 new CompletableFuture<>();
         failed.completeExceptionally(new RuntimeException("broker down"));
 
-        when(outbox.lockNextBatch(50)).thenReturn(List.of(e));
+        // First tick: lockNextBatch returns e; second tick: SQL filters out e (next_attempt_at in future)
+        when(outbox.lockNextBatch(50)).thenReturn(List.of(e), List.of());
         when(kafka.send(anyString(), anyString(), anyString())).thenReturn(failed);
 
         OutboxRelay r = relay(clock);
-        r.relay(); // first attempt → fails, backoff gate starts at 1s
+        r.relay(); // first attempt → fails, next_attempt_at set
         verify(kafka, times(1)).send(anyString(), anyString(), anyString());
-        verify(outbox).recordFailure(eq(e.getId()), contains("broker down"));
+        verify(outbox).recordFailure(eq(e.getId()), contains("broker down"), eq(FIXED.plusSeconds(1)));
 
-        // next tick with NO time advance: the row must be skipped, not re-sent
+        // next tick with NO time advance: lockNextBatch returns empty list, row is skipped
         r.relay();
         verify(kafka, times(1)).send(anyString(), anyString(), anyString());
-        verify(outbox, times(1)).recordFailure(any(), anyString());
+        verify(outbox, times(1)).recordFailure(any(), anyString(), any());
         verify(outbox, never()).markPublished(any(), any());
     }
 
     @Test
-    @DisplayName("once the backoff window elapses the row is retried; success clears the gate")
+    @DisplayName("once the backoff window elapses the row is retried; success marks published")
     void failedRowRetriedAfterBackoffElapses() throws Exception {
         AdjustableClock clock = new AdjustableClock();
         OutboxEntry e = pendingEntry();
@@ -150,7 +153,7 @@ class OutboxRelayTest {
         when(kafka.send(anyString(), anyString(), anyString())).thenReturn(failed);
 
         OutboxRelay r = relay(clock);
-        r.relay(); // failure #1 → attempts 1, gate closes for 1s
+        r.relay(); // failure #1 → attempts 1, next_attempt_at = now + 1s
         clock.advanceSeconds(2); // past the 1s backoff
 
         when(kafka.send(anyString(), anyString(), anyString()))
@@ -158,24 +161,22 @@ class OutboxRelayTest {
         r.relay(); // retry succeeds
 
         verify(kafka, times(2)).send(anyString(), anyString(), eq(e.getPayload()));
-        // recordFailure happened between the failed send and the successful retry send,
-        // and markPublished only after the retry succeeded (§7.4 ordering)
         InOrder order = inOrder(kafka, outbox);
         order.verify(kafka, times(1)).send(anyString(), anyString(), anyString()); // failed attempt
-        order.verify(outbox).recordFailure(eq(e.getId()), contains("broker down"));
+        order.verify(outbox).recordFailure(eq(e.getId()), contains("broker down"), eq(FIXED.plusSeconds(1)));
         order.verify(kafka, times(1)).send(anyString(), anyString(), anyString()); // retried attempt
         order.verify(outbox).markPublished(eq(e.getId()), eq(FIXED.plusSeconds(2)));
     }
 
     @Test
-    @DisplayName("backoff is exponential and capped at 5 minutes")
+    @DisplayName("backoff is attempts^2 seconds and capped at 5 minutes")
     void backoffIsExponentialAndCapped() {
-        long base = 1000L;
-        long cap = 300_000L;
-        assertThat(OutboxRelay.backoffDelayMs(0, base, cap)).isEqualTo(1_000L);   // failure 1: 1s
-        assertThat(OutboxRelay.backoffDelayMs(1, base, cap)).isEqualTo(2_000L);   // failure 2: 2s
-        assertThat(OutboxRelay.backoffDelayMs(2, base, cap)).isEqualTo(4_000L);   // failure 3: 4s
-        assertThat(OutboxRelay.backoffDelayMs(9, base, cap)).isEqualTo(300_000L); // capped
-        assertThat(OutboxRelay.backoffDelayMs(50, base, cap)).isEqualTo(300_000L);
+        assertThat(OutboxRelay.backoffDelaySeconds(1)).isEqualTo(1L);    // failure 1: 1s
+        assertThat(OutboxRelay.backoffDelaySeconds(2)).isEqualTo(4L);    // failure 2: 4s
+        assertThat(OutboxRelay.backoffDelaySeconds(3)).isEqualTo(9L);    // failure 3: 9s
+        assertThat(OutboxRelay.backoffDelaySeconds(4)).isEqualTo(16L);   // failure 4: 16s
+        assertThat(OutboxRelay.backoffDelaySeconds(10)).isEqualTo(100L); // failure 10: 100s
+        assertThat(OutboxRelay.backoffDelaySeconds(18)).isEqualTo(300L); // failure 18: 300s (capped at 5 min)
+        assertThat(OutboxRelay.backoffDelaySeconds(50)).isEqualTo(300L); // failure 50: 300s (capped at 5 min)
     }
 }

@@ -49,6 +49,9 @@ public class OutboxEntry {
     @Column(name = "last_error")
     private String lastError;
 
+    @Column(name = "next_attempt_at")
+    private Instant nextAttemptAt;
+
     protected OutboxEntry() {
         // JPA
     }
@@ -101,6 +104,10 @@ public class OutboxEntry {
 
     public String getLastError() {
         return lastError;
+    }
+
+    public Instant getNextAttemptAt() {
+        return nextAttemptAt;
     }
 
     /** Only called after the Kafka publish actually succeeded (§7.4). */

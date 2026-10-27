@@ -1,0 +1,1 @@
+ALTER TABLE outbox ADD COLUMN next_attempt_at TIMESTAMPTZ;

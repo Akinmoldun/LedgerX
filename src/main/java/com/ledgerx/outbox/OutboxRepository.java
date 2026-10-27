@@ -12,13 +12,14 @@ import org.springframework.data.repository.query.Param;
 public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
 
     /**
-     * Pick the next batch of unpublished rows. `ORDER BY created_at` with
-     * `FOR UPDATE SKIP LOCKED` lets several relay instances run safely:
+     * Pick the next batch of unpublished rows whose backoff has elapsed.
+     * `ORDER BY created_at` with `FOR UPDATE SKIP LOCKED` lets several relay instances run safely:
      * locked rows are invisible to every other relay (§7.4).
      */
     @Query(value = """
         SELECT * FROM outbox
          WHERE published_at IS NULL
+           AND (next_attempt_at IS NULL OR next_attempt_at <= now())
          ORDER BY created_at
          LIMIT :limit
          FOR UPDATE SKIP LOCKED
@@ -34,14 +35,18 @@ public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
         """, nativeQuery = true)
     void markPublished(@Param("id") UUID id, @Param("publishedAt") Instant publishedAt);
 
-    /** Publish failed — keep the row unpublished, bump attempts, store the reason. */
+    /** Publish failed — keep the row unpublished, bump attempts, store the reason and next retry time. */
     @Modifying
     @Query(value = """
         UPDATE outbox
-        SET attempts = attempts + 1, last_error = :error
+        SET attempts = attempts + 1, last_error = :error, next_attempt_at = :nextAttemptAt
         WHERE id = :id
         """, nativeQuery = true)
-    void recordFailure(@Param("id") UUID id, @Param("error") String error);
+    void recordFailure(@Param("id") UUID id, @Param("error") String error, @Param("nextAttemptAt") Instant nextAttemptAt);
+
+    default void recordFailure(UUID id, String error) {
+        recordFailure(id, error, null);
+    }
 
     /** Backing query for the `ledgerx.outbox.pending` gauge (§10). */
     @Query(value = "SELECT count(*) FROM outbox WHERE published_at IS NULL", nativeQuery = true)
