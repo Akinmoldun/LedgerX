@@ -9,7 +9,7 @@ Amends `docs/LedgerX_BUILD_SPEC.md`. Every deviation, dependency addition, schem
 **Decision:** Pessimistic row locks are primary — `AccountRepository.lockByIdsOrdered` executes `SELECT ... FOR UPDATE ... ORDER BY id` so every concurrent transfer acquires account locks in the same deterministic order (P6), preventing ABBA deadlocks. The funds check runs against the locked row. Optimistic `@Version` on `accounts` remains as a second, non-retried safety net for any path that somehow bypasses the ordered lock (e.g., manual SQL in tests); optimistic conflicts surface as an error and roll the transaction back — there is deliberately no app-level optimistic-retry loop (§2.4 self-check: no retries without backoff).
 **Alternatives:** (1) Optimistic-only with retry-on-conflict loops — rejected: retry storms under contention, hot accounts fail repeatedly. (2) `SELECT ... FOR UPDATE` without `ORDER BY id` — rejected: deadlock-prone under opposing transfer directions. (3) Application-level distributed locks (Redis etc.) — rejected: out of stack (§4.3) and violates DB-layer idempotency safety (P4).
 **Consequences:** Concurrent same-pair transfers serialize; throughput is bounded per account pair. Deadlock-free by construction. `mvn verify -Dit.test=ConcurrencyIT` is the proof.
-**Approved by:** pending
+**Approved by:** Human
 
 ## 2026-10-26 — Week 8 retry backoff persisted via V8 next_attempt_at column
 **Context:** §13 Week 8 requires exponential backoff between outbox publish retries, capped at 5 min, tracked via persisted state. In-memory backoff state was rejected because process restarts lose backoff timing and cause immediate retry storms. A durable "when may this row be retried again" requires a schema change beyond §6 (explicit Human approval per §2.2).
