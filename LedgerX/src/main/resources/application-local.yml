@@ -1,0 +1,13 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:postgresql://${LEDGERX_DB_HOST:localhost}:${LEDGERX_DB_PORT:5432}/ledgerx
+    username: ${LEDGERX_DB_USER:ledgerx}
+    password: ${LEDGERX_DB_PASSWORD:ledgerx}
+
+logging:
+  level:
+    com.ledgerx: DEBUG
+    org.hibernate.SQL: DEBUG

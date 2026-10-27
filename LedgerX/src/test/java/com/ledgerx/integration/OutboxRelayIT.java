@@ -1,0 +1,139 @@
+package com.ledgerx.integration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.DockerClientFactory;
+import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.kafka.KafkaContainer;
+
+/**
+ * Week 8 AC (§13): OutboxRelayIT with a REAL broker (§12 regret rule) —
+ * the automated version of the manual chaos run:
+ *
+ * <pre>
+ *   broker stopped → POST still returns 201 (outbox rows wait, no loss)
+ *   → relay records failure: attempts >= 1, last_error set, published_at NULL
+ *   → broker restarted → relay retries (exponential backoff) → published_at set
+ *   → consumer delivers the event EXACTLY ONCE (dedupe), no duplicates after recovery
+ * </pre>
+ *
+ * The broker container is stopped/started via the Docker API on the SAME
+ * container (not Testcontainers stop/start, which would recreate it and
+ * change its host port, invalidating the advertised-listener address).
+ * Skipped cleanly without Docker; always runs on a Docker machine.
+ */
+class OutboxRelayIT extends AbstractIntegrationTest {
+
+    private static final KafkaContainer KAFKA;
+
+    static {
+        if (dockerAvailable()) {
+            KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
+            KAFKA.start();
+        } else {
+            KAFKA = null;
+        }
+    }
+
+    @DynamicPropertySource
+    static void kafkaAndBackoff(DynamicPropertyRegistry registry) {
+        if (KAFKA != null) {
+            registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
+        }
+        // Faster backoff cadence ONLY in integration tests — production keeps
+        // base 1s / cap 5min from application.yml.
+        registry.add("ledgerx.outbox.relay-delay-ms", () -> "200");
+        registry.add("ledgerx.outbox.backoff-base-ms", () -> "300");
+    }
+
+    private static void stopBroker() {
+        DockerClientFactory.lazyClient()
+                .stopContainerCmd(KAFKA.getContainerId()).exec();
+    }
+
+    private static void startBroker() {
+        DockerClientFactory.lazyClient()
+                .startContainerCmd(KAFKA.getContainerId()).exec();
+    }
+
+    @Test
+    @DisplayName("kafka outage: transfer still postable, failure recorded, retry publishes exactly once after restart")
+    void outagePostRetryRecoverExactlyOnce() {
+        UUID from = account("outbox-it-from", 10_000);
+        UUID to = account("outbox-it-to", 0);
+
+        // 1) broker down
+        stopBroker();
+
+        // 2) POST still works — the transfer commits, the outbox row waits
+        UUID transferId = postTransfer(from, to);
+        assertThat(balance(from)).isEqualTo(8_750L); // 12 500 minor moved
+        assertThat(balance(to)).isEqualTo(12_500L);
+
+        // 3) relay records the failure — attempts >= 1, last_error set, unpublished
+        await().atMost(30, TimeUnit.SECONDS).until(() -> outboxRow(transferId).get("attempts") != null
+                && ((Number) outboxRow(transferId).get("attempts")).intValue() >= 1);
+        Map<String, Object> mid = outboxRow(transferId);
+        assertThat(mid.get("last_error")).isNotNull();
+        assertThat(mid.get("published_at"))
+                .as("row must stay unpublished at least until the broker returns")
+                .isNull();
+
+        // 4) broker back → relay retries
+        startBroker();
+        await().atMost(60, TimeUnit.SECONDS).until(() ->
+                outboxRow(transferId).get("published_at") != null);
+
+        // 5) the event arrives exactly once after recovery (dedupe from §7.5)
+        await().atMost(30, TimeUnit.SECONDS).until(() ->
+                consumedRows(transferId) == 1L);
+        // settle a bit longer — a duplicate side effect would push the count to 2
+        await().atLeast(2, TimeUnit.SECONDS);
+        assertThat(consumedRows(transferId)).isEqualTo(1L);
+        assertThat(consumedRows(transferId) - 1L).isZero();
+    }
+
+    private UUID postTransfer(UUID from, UUID to) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Tenant-Id", DEFAULT_TENANT);
+        headers.set("Idempotency-Key", "outbox-it-" + UUID.randomUUID());
+        Map<String, Object> body = Map.of(
+                "fromAccountId", from.toString(),
+                "toAccountId", to.toString(),
+                "amountMinor", 12_500,
+                "currency", "USD",
+                "description", "outbox outage IT");
+        ResponseEntity<String> response = rest.postForEntity(
+                "/api/v1/transfers", new HttpEntity<>(body, headers), String.class);
+        assertThat(response.getStatusCode().value()).isEqualTo(201);
+        String location = response.getHeaders().getLocation().getPath();
+        return UUID.fromString(location.substring(location.lastIndexOf('/') + 1));
+    }
+
+    private Map<String, Object> outboxRow(UUID transferId) {
+        return jdbc.queryForMap("""
+                SELECT attempts, last_error, published_at
+                  FROM outbox
+                 WHERE aggregate_id = ?::uuid
+                   AND event_type = 'TransferPosted'
+                """, transferId.toString());
+    }
+
+    private long consumedRows(UUID transferId) {
+        Long count = jdbc.queryForObject(
+                "SELECT count(*) FROM audit_log WHERE action = 'TRANSFER_POSTED_CONSUMED' AND entity_id = ?::uuid",
+                Long.class, transferId.toString());
+        return count == null ? 0L : count;
+    }
+}

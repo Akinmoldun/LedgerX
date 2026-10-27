@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: ledgerx
+  kafka:
+    bootstrap-servers: ${LEDGERX_KAFKA_BOOTSTRAP:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: audit-consumer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+  datasource:
+    url: ${LEDGERX_DB_URL:jdbc:postgresql://localhost:5432/ledgerx}
+    username: ${LEDGERX_DB_USER:ledgerx}
+    password: ${LEDGERX_DB_PASSWORD:ledgerx}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: INFO
+
+ledgerx:
+  outbox:
+    relay-delay-ms: 500
+    backoff-base-ms: 1000
+    backoff-cap-ms: 300000
+  kafka:
+    topic: ledgerx.transfer.posted.v1
