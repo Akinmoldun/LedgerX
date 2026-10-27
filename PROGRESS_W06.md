@@ -1,7 +1,7 @@
 # Week 6 — Transactional outbox
 
 **Started:** 2026-10-25 18:00  
-**Status:** ✅ Approved (retroactively approved per user instruction)
+**Status:** 🔵 Awaiting review
 
 ## Tasks
 - [x] V5 migration — `outbox` (`id UUID PK DEFAULT gen_random_uuid()`, `aggregate_type TEXT`, `aggregate_id UUID`, `event_type TEXT`, `payload JSONB`, `headers JSONB DEFAULT '{}'`, `created_at TIMESTAMPTZ DEFAULT now()`, `published_at TIMESTAMPTZ`, `attempts INT DEFAULT 0`, `last_error TEXT`, partial index `outbox_unpublished` ON `outbox (created_at) WHERE published_at IS NULL`) — spec §6 exact.
@@ -22,5 +22,16 @@
 - ✅ `SKIP LOCKED` present in `lockNextBatch`.
 - ✅ `markPublished` only called after `.get(5, TimeUnit.SECONDS)` completes successfully.
 
+## Tests run
+```
+$ mvn -B verify
+[INFO] Results:
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0 (units)
+...
+[INFO] Results:
+[WARNING] Tests run: 13, Failures: 0, Errors: 0, Skipped: 13 (ITs — Docker unavailable locally)
+[INFO] BUILD SUCCESS
+```
+
 ## Human approval
-✅ Approved (retroactively marked per DECISION A review).
+(blank — the Human fills this)

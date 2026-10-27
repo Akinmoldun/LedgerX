@@ -1,7 +1,7 @@
 # Week 7 — Consumers + dedupe
 
 **Started:** 2026-10-26 00:30
-**Status:** 🟡 In progress (toward 🔵 Awaiting review)
+**Status:** 🔵 Awaiting review
 
 ## Tasks
 - [x] **Week 6 debt repair first** — `main` tip (dd5d8f4) did not compile: a fake in-package `KafkaTemplate` wrapper and a stray `OutboxRelayTest.java` sat in `src/main`. Both deleted; outbox now depends only on `org.springframework.kafka.core.KafkaTemplate<String,String>` (spec §5/§7.4, no wrapper, no DECISIONS entry needed).
