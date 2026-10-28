@@ -3,6 +3,7 @@ package com.ledgerx.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +40,10 @@ class OutboxRelayIT extends AbstractIntegrationTest {
 
     @Container
     static final KafkaContainer KAFKA =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
+            new KafkaContainer(
+                    DockerImageName.parse("confluentinc/cp-kafka:7.6.0")
+                            .asCompatibleSubstituteFor("apache/kafka"))
+                    .withStartupTimeout(Duration.ofMinutes(3));
 
     @DynamicPropertySource
     static void kafkaAndBackoff(DynamicPropertyRegistry registry) {

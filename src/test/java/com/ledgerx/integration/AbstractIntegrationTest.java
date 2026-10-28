@@ -1,5 +1,6 @@
 package com.ledgerx.integration;
 
+import java.time.Duration;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +22,8 @@ public abstract class AbstractIntegrationTest {
 
     @Container
     protected static final PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16-alpine");
+            new PostgreSQLContainer<>("postgres:16")
+                    .withStartupTimeout(Duration.ofMinutes(3));
 
     @DynamicPropertySource
     static void datasource(DynamicPropertyRegistry registry) {
