@@ -35,7 +35,6 @@ import org.testcontainers.kafka.KafkaContainer;
  * change its host port, invalidating the advertised-listener address).
  * Skipped cleanly without Docker; always runs on a Docker machine.
  */
-@Testcontainers(disabledWithoutDocker = true)
 class OutboxRelayIT extends AbstractIntegrationTest {
 
     @Container

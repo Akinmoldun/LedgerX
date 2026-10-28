@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 public abstract class AbstractIntegrationTest {
 
     public static final String DEFAULT_TENANT = "00000000-0000-0000-0000-000000000001";

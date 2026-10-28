@@ -15,12 +15,8 @@ import javax.sql.DataSource;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
-import net.jqwik.api.lifecycle.AddLifecycleHook;
 import net.jqwik.api.lifecycle.AfterContainer;
 import net.jqwik.api.lifecycle.BeforeContainer;
-import net.jqwik.api.lifecycle.LifecycleContext;
-import net.jqwik.api.lifecycle.SkipExecutionHook;
-import net.jqwik.api.lifecycle.SkipExecutionHook.SkipResult;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,10 +35,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
  * Postgres container manually instead of extending {@link
  * AbstractIntegrationTest}.
  */
-@AddLifecycleHook(TransferInvariantsIT.SkipWithoutDocker.class)
 class TransferInvariantsIT {
-
-    private static final boolean DOCKER = AbstractIntegrationTest.dockerAvailable();
 
     private static final PostgreSQLContainer<?> PG = new PostgreSQLContainer<>("postgres:16-alpine");
     private static final AtomicInteger TRY = new AtomicInteger();
@@ -53,12 +46,6 @@ class TransferInvariantsIT {
 
     @BeforeContainer
     static void boot() {
-        // The SkipExecutionHook above makes container hooks unreachable without
-        // Docker; this guard is defense in depth (an aborted container would
-        // surface as an ERROR rather than a skip).
-        if (!DOCKER) {
-            return;
-        }
         PG.start();
         app = new SpringApplicationBuilder(LedgerXApplication.class)
                 .profiles("test")
@@ -148,11 +135,4 @@ class TransferInvariantsIT {
                 "SELECT balance_minor FROM accounts WHERE id = ?::uuid", Long.class, accountId.toString());
     }
 
-    /** Skips the whole container cleanly when Docker is absent — jqwik-native skip, not an error. */
-    static class SkipWithoutDocker implements SkipExecutionHook {
-        @Override
-        public SkipResult shouldBeSkipped(LifecycleContext context) {
-            return DOCKER ? SkipResult.doNotSkip() : SkipResult.skip("Docker not available");
-        }
-    }
 }

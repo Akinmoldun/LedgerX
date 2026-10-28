@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName;
  * via Testcontainers; skipped cleanly without Docker, always runs on a
  * Docker machine.
  */
-@Testcontainers(disabledWithoutDocker = true)
+@Testcontainers
 class ConsumerDedupeIT extends AbstractIntegrationTest {
 
     @Container
