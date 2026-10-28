@@ -2,10 +2,6 @@ spring:
   config:
     activate:
       on-profile: test
-  datasource:
-    url: ${TEST_DB_URL:jdbc:postgresql://localhost:5433/ledgerx}
-    username: ${TEST_DB_USER:ledgerx}
-    password: ${TEST_DB_PASSWORD:ledgerx}
   jpa:
     hibernate:
       ddl-auto: validate

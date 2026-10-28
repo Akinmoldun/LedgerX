@@ -47,13 +47,12 @@ class TransferInvariantsIT {
     @BeforeContainer
     static void boot() {
         PG.start();
+        System.setProperty("spring.datasource.url", PG.getJdbcUrl());
+        System.setProperty("spring.datasource.username", PG.getUsername());
+        System.setProperty("spring.datasource.password", PG.getPassword());
         app = new SpringApplicationBuilder(LedgerXApplication.class)
                 .profiles("test")
-                .properties(
-                        "spring.datasource.url=" + PG.getJdbcUrl(),
-                        "spring.datasource.username=" + PG.getUsername(),
-                        "spring.datasource.password=" + PG.getPassword(),
-                        "server.port=0")
+                .properties("server.port=0")
                 .run();
         transfers = app.getBean(TransferService.class);
         jdbc = new JdbcTemplate(app.getBean(DataSource.class));
@@ -64,6 +63,9 @@ class TransferInvariantsIT {
         if (app != null) {
             app.close();
         }
+        System.clearProperty("spring.datasource.url");
+        System.clearProperty("spring.datasource.username");
+        System.clearProperty("spring.datasource.password");
         if (PG.isRunning()) {
             PG.stop();
         }
