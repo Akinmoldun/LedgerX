@@ -83,20 +83,24 @@ public class TransferService {
         if (req.fromAccountId().equals(req.toAccountId())) {
             throw new SelfTransferException("from and to accounts must differ");
         }
-        Account from = accounts.findByIdAndTenantId(req.fromAccountId(), tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("account not found: " + req.fromAccountId()));
-        Account to = accounts.findByIdAndTenantId(req.toAccountId(), tenantId)
-                .orElseThrow(() -> new EntityNotFoundException("account not found: " + req.toAccountId()));
-        if (!req.currency().equals(from.getCurrency()) || !req.currency().equals(to.getCurrency())) {
-            throw new CurrencyMismatchException("transfer currency must match both accounts");
-        }
-
-        // 3) Lock both accounts in deterministic order (P6)
+        // 3) Lock both accounts in deterministic order (P6) BEFORE reading them.
+        //    Reading first (findByIdAndTenantId) would put stale copies in the
+        //    persistence context; the locking query would then hand those stale
+        //    rows back after a concurrent commit → optimistic-lock failure (500).
         Map<UUID, Account> locked = accounts
                 .lockByIdsOrdered(List.of(req.fromAccountId(), req.toAccountId())).stream()
                 .collect(Collectors.toMap(Account::getId, Function.identity()));
-        from = locked.get(req.fromAccountId());
-        to = locked.get(req.toAccountId());
+        Account from = locked.get(req.fromAccountId());
+        Account to = locked.get(req.toAccountId());
+        if (from == null || !tenantId.equals(from.getTenantId())) {
+            throw new EntityNotFoundException("account not found: " + req.fromAccountId());
+        }
+        if (to == null || !tenantId.equals(to.getTenantId())) {
+            throw new EntityNotFoundException("account not found: " + req.toAccountId());
+        }
+        if (!req.currency().equals(from.getCurrency()) || !req.currency().equals(to.getCurrency())) {
+            throw new CurrencyMismatchException("transfer currency must match both accounts");
+        }
 
         // 4) Funds check (unless allow_overdraft) — on the locked row
         if (!from.isAllowOverdraft() && from.getBalanceMinor() < req.amountMinor()) {

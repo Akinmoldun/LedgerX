@@ -66,16 +66,16 @@ public class Transfer {
         this.currency = currency;
         this.amountMinor = amountMinor;
         this.description = description;
-        this.status = TransferStatus.PENDING;
+        this.status = TransferStatus.pending;
         this.createdAt = Instant.now();
     }
 
     /** Step 11 — flips pending → posted exactly once. */
     public void markPosted() {
-        if (status != TransferStatus.PENDING) {
+        if (status != TransferStatus.pending) {
             throw new IllegalStateException("transfer already " + status.getDbValue());
         }
-        this.status = TransferStatus.POSTED;
+        this.status = TransferStatus.posted;
         this.postedAt = Instant.now();
     }
 

@@ -15,7 +15,7 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.kafka.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /**
@@ -29,11 +29,9 @@ import org.testcontainers.utility.DockerImageName;
 class ConsumerDedupeIT extends AbstractIntegrationTest {
 
     @Container
-    static final KafkaContainer KAFKA =
-            new KafkaContainer(
-                    DockerImageName.parse("confluentinc/cp-kafka:7.6.0")
-                            .asCompatibleSubstituteFor("apache/kafka"))
-                    .withStartupTimeout(Duration.ofMinutes(3));
+    static final ConfluentKafkaContainer KAFKA =
+            new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"))
+                    .withStartupTimeout(Duration.ofMinutes(5));
 
     @DynamicPropertySource
     static void kafkaBootstrap(DynamicPropertyRegistry registry) {

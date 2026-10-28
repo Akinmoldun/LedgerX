@@ -3,6 +3,9 @@ package com.ledgerx.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
 import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
@@ -18,7 +21,7 @@ import org.testcontainers.DockerClientFactory;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.kafka.KafkaContainer;
+import org.testcontainers.kafka.ConfluentKafkaContainer;
 
 /**
  * Week 8 AC (§13): OutboxRelayIT with a REAL broker (§12 regret rule) —
@@ -34,16 +37,30 @@ import org.testcontainers.kafka.KafkaContainer;
  * The broker container is stopped/started via the Docker API on the SAME
  * container (not Testcontainers stop/start, which would recreate it and
  * change its host port, invalidating the advertised-listener address).
- * Skipped cleanly without Docker; always runs on a Docker machine.
+ * Requires Docker.
  */
+@Testcontainers
 class OutboxRelayIT extends AbstractIntegrationTest {
 
+    private static final int FIXED_KAFKA_PORT = freePort();
+
+    private static int freePort() {
+        try (java.net.ServerSocket socket = new java.net.ServerSocket(0)) {
+            return socket.getLocalPort();
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     @Container
-    static final KafkaContainer KAFKA =
-            new KafkaContainer(
-                    DockerImageName.parse("confluentinc/cp-kafka:7.6.0")
-                            .asCompatibleSubstituteFor("apache/kafka"))
-                    .withStartupTimeout(Duration.ofMinutes(3));
+    static final ConfluentKafkaContainer KAFKA =
+            new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"))
+                    // Pin the host port: Docker may hand out a NEW random host port when a
+                    // stopped container is started again, which would strand the producer
+                    // (bootstrap servers + advertised listener are fixed at first start).
+                    .withCreateContainerCmdModifier(cmd -> cmd.getHostConfig().withPortBindings(
+                            new PortBinding(Ports.Binding.bindPort(FIXED_KAFKA_PORT), new ExposedPort(9092))))
+                    .withStartupTimeout(Duration.ofMinutes(5));
 
     @DynamicPropertySource
     static void kafkaAndBackoff(DynamicPropertyRegistry registry) {

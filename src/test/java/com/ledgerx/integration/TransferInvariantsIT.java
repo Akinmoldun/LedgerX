@@ -37,7 +37,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
  */
 class TransferInvariantsIT {
 
-    private static final PostgreSQLContainer<?> PG = new PostgreSQLContainer<>("postgres:16-alpine");
+    private static final PostgreSQLContainer<?> PG = AbstractIntegrationTest.POSTGRES;
     private static final AtomicInteger TRY = new AtomicInteger();
 
     private static ConfigurableApplicationContext app;
@@ -46,7 +46,6 @@ class TransferInvariantsIT {
 
     @BeforeContainer
     static void boot() {
-        PG.start();
         System.setProperty("spring.datasource.url", PG.getJdbcUrl());
         System.setProperty("spring.datasource.username", PG.getUsername());
         System.setProperty("spring.datasource.password", PG.getPassword());
@@ -66,9 +65,6 @@ class TransferInvariantsIT {
         System.clearProperty("spring.datasource.url");
         System.clearProperty("spring.datasource.username");
         System.clearProperty("spring.datasource.password");
-        if (PG.isRunning()) {
-            PG.stop();
-        }
     }
 
     @Property

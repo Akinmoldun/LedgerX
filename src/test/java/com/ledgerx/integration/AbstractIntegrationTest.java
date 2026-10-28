@@ -1,6 +1,7 @@
 package com.ledgerx.integration;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,20 +11,27 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-@Testcontainers
 public abstract class AbstractIntegrationTest {
 
     public static final String DEFAULT_TENANT = "00000000-0000-0000-0000-000000000001";
 
-    @Container
+    /**
+     * One Postgres for the whole JVM (singleton pattern): started once, reaped by
+     * Ryuk at JVM exit. Starting a container per test class cost ~65s each on this
+     * Docker setup. Data dir on tmpfs removes WSL2 disk I/O from initdb/startup.
+     * All ITs use random account codes/ids, so sharing the DB is safe.
+     */
     protected static final PostgreSQLContainer<?> POSTGRES =
             new PostgreSQLContainer<>("postgres:16")
-                    .withStartupTimeout(Duration.ofMinutes(3));
+                    .withTmpFs(Map.of("/var/lib/postgresql/data", "rw"))
+                    .withStartupTimeout(Duration.ofMinutes(5));
+
+    static {
+        POSTGRES.start();
+    }
 
     @DynamicPropertySource
     static void datasource(DynamicPropertyRegistry registry) {

@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Transactional outbox relay (§7.4 + Week 8). Zero {@code kafka.send}
@@ -36,6 +38,7 @@ public class OutboxRelay {
     private final Clock clock;
     private final String topic;
 
+    @Autowired
     public OutboxRelay(OutboxRepository outbox,
                        KafkaTemplate<String, String> kafka,
                        MeterRegistry metrics,
@@ -74,6 +77,7 @@ public class OutboxRelay {
     }
 
     @Scheduled(fixedDelayString = "${ledgerx.outbox.relay-delay-ms:500}")
+    @Transactional
     public void relay() {
         while (true) {
             List<OutboxEntry> batch = outbox.lockNextBatch(50);

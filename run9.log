@@ -1,0 +1,812 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.ledgerx:ledgerx >-------------------------
+[INFO] Building LedgerX 0.1.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ ledgerx ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] Copying 8 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ ledgerx ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 39 source files with javac [debug parameters release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ ledgerx ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ ledgerx ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 11 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /C:/Users/akin_moladun/Downloads/LedgerX/src/test/java/com/ledgerx/integration/IdempotencyIT.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/akin_moladun/Downloads/LedgerX/src/test/java/com/ledgerx/integration/IdempotencyIT.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ ledgerx ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.ledgerx.account.AccountTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.477 s -- in com.ledgerx.account.AccountTest
+[INFO] Running com.ledgerx.outbox.OutboxRelayTest
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (C:\Users\akin_moladun\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+23:05:35.878 [main] WARN com.ledgerx.outbox.OutboxRelay -- outbox publish failed for TransferPosted 14bda701-9de3-4bba-b118-b40fcbc8f374: java.lang.RuntimeException: broker down (attempts 1)
+23:05:36.078 [main] WARN com.ledgerx.outbox.OutboxRelay -- outbox publish failed for TransferPosted 77448789-1cd6-4d56-9346-0686309f4966: java.lang.RuntimeException: broker down (attempts 1)
+23:05:36.160 [main] WARN com.ledgerx.outbox.OutboxRelay -- outbox publish failed for TransferPosted 69d79c22-b83e-46f5-9666-22818c13b431: java.lang.RuntimeException: broker unreachable (attempts 1)
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.476 s -- in com.ledgerx.outbox.OutboxRelayTest
+[INFO] Running com.ledgerx.unit.MoneyTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.248 s -- in com.ledgerx.unit.MoneyTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ ledgerx ---
+[INFO] Building jar: C:\Users\akin_moladun\Downloads\LedgerX\target\ledgerx-0.1.0.jar
+[INFO] 
+[INFO] --- spring-boot:3.4.5:repackage (repackage) @ ledgerx ---
+[INFO] Replacing main artifact C:\Users\akin_moladun\Downloads\LedgerX\target\ledgerx-0.1.0.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Users\akin_moladun\Downloads\LedgerX\target\ledgerx-0.1.0.jar.original
+[INFO] 
+[INFO] --- failsafe:3.5.3:integration-test (default) @ ledgerx ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.ledgerx.integration.ConcurrencyIT
+23:05:55.337 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.ledgerx.integration.ConcurrencyIT]: ConcurrencyIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+23:05:56.574 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.ledgerx.LedgerXApplication for test class com.ledgerx.integration.ConcurrencyIT
+23:05:57.492 [main] INFO org.testcontainers.images.PullPolicy -- Image pull policy will be performed by: DefaultPullPolicy()
+23:05:57.518 [main] INFO org.testcontainers.utility.ImageNameSubstitutor -- Image name substitution will be performed by: DefaultImageNameSubstitutor (composite of 'ConfigurationFileImageNameSubstitutor' and 'PrefixingImageNameSubstitutor')
+23:05:57.782 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.21.4
+23:05:59.387 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+23:11:31.980 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Found Docker environment with local Npipe socket (npipe:////./pipe/docker_engine)
+23:11:32.887 [main] INFO org.testcontainers.DockerClientFactory -- Docker host IP address is localhost
+23:11:34.928 [main] INFO org.testcontainers.DockerClientFactory -- Connected to docker: 
+  Server Version: 29.9.2
+  API Version: 1.56
+  Operating System: Docker Desktop
+  Total Memory: 5928 MB
+  Labels: 
+    com.docker.desktop.address=npipe://\\.\pipe\docker_cli
+23:11:49.375 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Creating container for image: testcontainers/ryuk:0.12.0
+23:12:48.572 [main] INFO org.testcontainers.utility.RegistryAuthLocator -- Failure when attempting to lookup auth config. Please ignore if you don't have images in an authenticated registry. Details: (dockerImageName: testcontainers/ryuk:0.12.0, configFile: C:\Users\akin_moladun\.docker\config.json, configEnv: DOCKER_AUTH_CONFIG). Falling back to docker-java default behaviour. Exception message: Timed out waiting for Process[pid=14480, exitValue="not exited"] to finish, timeout: 30 seconds, executed command [cmd, /c, docker-credential-desktop, get]
+23:13:27.341 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 is starting: 06431bf7ea2d125d317e9fba95a65c56542ea4c6ca55f59b33bbaa3e85b3f95b
+23:14:08.799 [main] INFO tc.testcontainers/ryuk:0.12.0 -- Container testcontainers/ryuk:0.12.0 started in PT2M18.8927537S
+23:14:20.394 [main] INFO org.testcontainers.utility.RyukResourceReaper -- Ryuk started - will monitor and terminate Testcontainers containers on JVM exit
+23:14:20.394 [main] INFO org.testcontainers.DockerClientFactory -- Checking the system...
+23:14:20.959 [main] INFO org.testcontainers.DockerClientFactory -- ?? Docker server version should be at least 1.6.0
+23:14:20.969 [main] INFO tc.postgres:16 -- Creating container for image: postgres:16
+23:14:29.037 [main] INFO tc.postgres:16 -- Container postgres:16 is starting: 9e4b5c1106b077294186a86cb5783fcc52000f34f7775dd1ab5cd29b3c6eabd1
+23:15:03.983 [main] INFO tc.postgres:16 -- Container postgres:16 started in PT43.0143283S
+23:15:04.004 [main] INFO tc.postgres:16 -- Container is started (JDBC URL: jdbc:postgresql://localhost:60656/test?loggerLevel=OFF)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-10-28T23:15:16.961+01:00  INFO 1912 --- [ledgerx] [           main] com.ledgerx.integration.ConcurrencyIT    : Starting ConcurrencyIT using Java 21.0.12.1 with PID 1912 (started by akin_moladun in C:\Users\akin_moladun\Downloads\LedgerX)
+2026-10-28T23:15:16.966+01:00  INFO 1912 --- [ledgerx] [           main] com.ledgerx.integration.ConcurrencyIT    : The following 1 profile is active: "test"
+2026-10-28T23:16:52.501+01:00  INFO 1912 --- [ledgerx] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-10-28T23:16:55.313+01:00  INFO 1912 --- [ledgerx] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1535 ms. Found 8 JPA repository interfaces.
+2026-10-28T23:17:27.318+01:00  INFO 1912 --- [ledgerx] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2026-10-28T23:17:27.753+01:00  INFO 1912 --- [ledgerx] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-10-28T23:17:27.753+01:00  INFO 1912 --- [ledgerx] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-10-28T23:17:30.330+01:00  INFO 1912 --- [ledgerx] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-10-28T23:17:30.336+01:00  INFO 1912 --- [ledgerx] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 132992 ms
+2026-10-28T23:17:51.330+01:00  INFO 1912 --- [ledgerx] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-10-28T23:17:57.488+01:00  INFO 1912 --- [ledgerx] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@23ade612
+2026-10-28T23:17:57.496+01:00  INFO 1912 --- [ledgerx] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-10-28T23:17:57.660+01:00  INFO 1912 --- [ledgerx] [           main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:60656/test?loggerLevel=OFF (PostgreSQL 16.15)
+2026-10-28T23:17:58.165+01:00  INFO 1912 --- [ledgerx] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Schema history table "public"."flyway_schema_history" does not exist yet
+2026-10-28T23:17:58.192+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbValidate     : Successfully validated 8 migrations (execution time 00:00.271s)
+2026-10-28T23:17:58.421+01:00  INFO 1912 --- [ledgerx] [           main] o.f.c.i.s.JdbcTableSchemaHistory         : Creating Schema History table "public"."flyway_schema_history" ...
+2026-10-28T23:17:58.668+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": << Empty Schema >>
+2026-10-28T23:17:58.698+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "1 - tenants"
+2026-10-28T23:17:59.288+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "2 - accounts"
+2026-10-28T23:17:59.396+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "3 - transfers entries"
+2026-10-28T23:17:59.525+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "4 - ledger events"
+2026-10-28T23:17:59.632+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "5 - outbox"
+2026-10-28T23:17:59.728+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "6 - audit log"
+2026-10-28T23:17:59.830+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "7 - processed events"
+2026-10-28T23:17:59.950+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Migrating schema "public" to version "8 - outbox next attempt at"
+2026-10-28T23:18:00.275+01:00  INFO 1912 --- [ledgerx] [           main] o.f.core.internal.command.DbMigrate      : Successfully applied 8 migrations to schema "public", now at version v8 (execution time 00:00.821s)
+2026-10-28T23:18:02.788+01:00  INFO 1912 --- [ledgerx] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-10-28T23:18:04.393+01:00  INFO 1912 --- [ledgerx] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-10-28T23:18:05.699+01:00  INFO 1912 --- [ledgerx] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-10-28T23:18:10.441+01:00  INFO 1912 --- [ledgerx] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-10-28T23:18:12.641+01:00  INFO 1912 --- [ledgerx] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 16.15
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-10-28T23:18:29.138+01:00  INFO 1912 --- [ledgerx] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-10-28T23:18:29.412+01:00  INFO 1912 --- [ledgerx] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-10-28T23:18:33.308+01:00  INFO 1912 --- [ledgerx] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-10-28T23:18:53.870+01:00  INFO 1912 --- [ledgerx] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-10-28T23:19:05.718+01:00  INFO 1912 --- [ledgerx] [           main] o.a.k.clients.admin.AdminClientConfig    : AdminClientConfig values: 
+	auto.include.jmx.reporter = true
+	bootstrap.controllers = []
+	bootstrap.servers = [localhost:9092]
+	client.dns.lookup = use_all_dns_ips
+	client.id = ledgerx-admin-0
+	connections.max.idle.ms = 300000
+	default.api.timeout.ms = 60000
+	enable.metrics.push = true
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+
+2026-10-28T23:19:09.633+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.8.1
+2026-10-28T23:19:09.633+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 70d6ff42debf7e17
+2026-10-28T23:19:09.633+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1793225949561
+2026-10-28T23:19:09.978+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:09.984+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:10.098+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:10.098+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:10.211+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:10.211+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:10.432+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:10.432+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:10.882+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:10.884+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:11.788+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:11.788+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:12.684+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:12.684+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:13.692+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:13.692+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:14.800+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:14.800+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:15.691+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:15.691+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:16.797+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:16.797+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:17.888+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:17.890+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:18.900+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:18.902+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:19.911+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:19.911+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:20.918+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:20.918+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:21.945+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:21.945+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:22.830+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:22.830+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:23.833+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:23.833+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:24.834+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:24.834+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:25.840+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:25.840+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:26.833+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:26.833+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:27.823+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:27.823+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:28.833+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:28.833+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:29.844+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:29.844+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:30.728+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:30.728+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:31.839+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:31.839+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:32.730+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:32.730+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:33.730+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:33.730+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:34.841+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:34.841+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:35.740+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:35.740+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:36.721+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:36.721+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:37.724+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:37.724+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:38.734+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:38.738+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:39.680+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.a.k.c.a.i.AdminMetadataManager         : [AdminClient clientId=ledgerx-admin-0] Metadata update failed
+
+org.apache.kafka.common.errors.TimeoutException: Timed out waiting for a node assignment. Call: fetchMetadata
+
+2026-10-28T23:19:39.822+01:00 ERROR 1912 --- [ledgerx] [           main] o.springframework.kafka.core.KafkaAdmin  : Could not configure topics
+
+org.springframework.kafka.KafkaException: Timed out waiting to get existing topics
+	at org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:571) ~[spring-kafka-3.3.5.jar:3.3.5]
+	at java.base/java.util.HashMap.forEach(HashMap.java:1429) ~[na:na]
+	at java.base/java.util.Collections$UnmodifiableMap.forEach(Collections.java:1708) ~[na:na]
+	at org.springframework.kafka.core.KafkaAdmin.checkPartitions(KafkaAdmin.java:550) ~[spring-kafka-3.3.5.jar:3.3.5]
+	at org.springframework.kafka.core.KafkaAdmin.addOrModifyTopicsIfNeeded(KafkaAdmin.java:443) ~[spring-kafka-3.3.5.jar:3.3.5]
+	at org.springframework.kafka.core.KafkaAdmin.initialize(KafkaAdmin.java:276) ~[spring-kafka-3.3.5.jar:3.3.5]
+	at org.springframework.kafka.core.KafkaAdmin.afterSingletonsInstantiated(KafkaAdmin.java:245) ~[spring-kafka-3.3.5.jar:3.3.5]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1149) ~[spring-beans-6.2.6.jar:6.2.6]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.6.jar:6.2.6]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.6.jar:6.2.6]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.5.jar:3.4.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:753) ~[spring-boot-3.4.5.jar:3.4.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.5.jar:3.4.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.5.jar:3.4.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:144) ~[spring-boot-test-3.4.5.jar:3.4.5]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58) ~[spring-core-6.2.6.jar:6.2.6]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46) ~[spring-core-6.2.6.jar:6.2.6]
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1462) ~[spring-boot-3.4.5.jar:3.4.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:563) ~[spring-boot-test-3.4.5.jar:3.4.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:144) ~[spring-boot-test-3.4.5.jar:3.4.5]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:110) ~[spring-boot-test-3.4.5.jar:3.4.5]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:225) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:152) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:155) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:111) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:159) ~[spring-test-6.2.6.jar:6.2.6]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:383) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$12(ClassBasedTestDescriptor.java:378) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:377) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$7(ClassBasedTestDescriptor.java:290) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:289) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:279) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$6(ClassBasedTestDescriptor.java:278) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:31) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$prepare$1(TestMethodTestDescriptor.java:105) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:104) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.prepare(TestMethodTestDescriptor.java:68) ~[junit-jupiter-engine-5.11.4.jar:5.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$2(NodeTestTask.java:128) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.prepare(NodeTestTask.java:128) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.11.4.jar:1.11.4]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:194) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.3.jar:3.5.3]
+Caused by: java.util.concurrent.TimeoutException: null
+	at java.base/java.util.concurrent.CompletableFuture.timedGet(CompletableFuture.java:1960) ~[na:na]
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2095) ~[na:na]
+	at org.apache.kafka.common.internals.KafkaFutureImpl.get(KafkaFutureImpl.java:180) ~[kafka-clients-3.8.1.jar:na]
+	at org.springframework.kafka.core.KafkaAdmin.lambda$checkPartitions$13(KafkaAdmin.java:553) ~[spring-kafka-3.3.5.jar:3.3.5]
+	... 97 common frames omitted
+
+2026-10-28T23:19:39.833+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:39.833+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:40.720+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:40.720+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:41.722+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:41.722+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:42.723+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:42.723+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:43.724+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:43.724+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:44.718+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:44.718+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:45.730+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:45.730+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:46.841+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:46.841+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:47.945+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:47.945+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:48.953+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Node -1 disconnected.
+2026-10-28T23:19:48.953+01:00  WARN 1912 --- [ledgerx] [ledgerx-admin-0] org.apache.kafka.clients.NetworkClient   : [AdminClient clientId=ledgerx-admin-0] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:49.840+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.a.k.clients.admin.KafkaAdminClient     : [AdminClient clientId=ledgerx-admin-0] Forcing a hard I/O thread shutdown. Requests in progress will be aborted.
+2026-10-28T23:19:49.840+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.a.kafka.common.utils.AppInfoParser     : App info kafka.admin.client for ledgerx-admin-0 unregistered
+2026-10-28T23:19:49.842+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.a.k.c.a.i.AdminMetadataManager         : [AdminClient clientId=ledgerx-admin-0] Metadata update failed
+
+org.apache.kafka.common.errors.TimeoutException: The AdminClient thread has exited. Call: fetchMetadata
+
+2026-10-28T23:19:49.842+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.a.k.clients.admin.KafkaAdminClient     : [AdminClient clientId=ledgerx-admin-0] Timed out 2 remaining operation(s) during close.
+2026-10-28T23:19:49.850+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.apache.kafka.common.metrics.Metrics    : Metrics scheduler closed
+2026-10-28T23:19:49.852+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.apache.kafka.common.metrics.Metrics    : Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-10-28T23:19:49.852+01:00  INFO 1912 --- [ledgerx] [ledgerx-admin-0] o.apache.kafka.common.metrics.Metrics    : Metrics reporters closed
+2026-10-28T23:19:49.970+01:00  INFO 1912 --- [ledgerx] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 57438 (http) with context path '/'
+2026-10-28T23:19:50.461+01:00  INFO 1912 --- [ledgerx] [           main] o.a.k.clients.consumer.ConsumerConfig    : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-audit-consumer-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = audit-consumer
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-10-28T23:19:51.694+01:00  INFO 1912 --- [ledgerx] [           main] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+2026-10-28T23:19:52.608+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.8.1
+2026-10-28T23:19:52.608+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 70d6ff42debf7e17
+2026-10-28T23:19:52.608+01:00  INFO 1912 --- [ledgerx] [           main] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1793225992608
+2026-10-28T23:19:52.643+01:00  INFO 1912 --- [ledgerx] [           main] o.a.k.c.c.internals.LegacyKafkaConsumer  : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Subscribed to topic(s): ledgerx.transfer.posted.v1
+2026-10-28T23:19:52.978+01:00  INFO 1912 --- [ledgerx] [           main] com.ledgerx.integration.ConcurrencyIT    : Started ConcurrencyIT in 284.002 seconds (process running for 841.551)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+2026-10-28T23:19:57.060+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:57.060+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:57.060+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:57.185+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:57.185+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:57.187+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:57.312+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:57.312+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:57.312+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:57.570+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:57.570+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:57.570+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:58.078+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:58.078+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:58.078+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:58.812+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:58.812+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:58.812+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:19:59.825+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:19:59.825+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:19:59.825+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:00.832+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:00.833+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:00.833+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:01.860+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:01.860+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:01.860+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:02.874+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:02.874+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:02.874+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:03.879+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:03.884+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:03.884+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:04.839+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:04.839+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:04.839+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:05.846+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:05.848+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:05.848+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:06.793+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:06.793+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:06.793+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:07.801+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:07.801+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:07.801+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:08.822+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:08.822+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:08.822+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:09.770+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:09.770+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:09.770+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:10.724+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:10.724+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:10.724+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:11.738+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:11.738+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:11.738+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:12.618+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:12.618+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:12.618+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:13.523+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:13.523+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:13.523+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:14.570+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:14.570+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:14.570+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:15.573+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:15.573+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:15.573+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:16.583+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:16.583+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:16.583+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:17.602+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:17.602+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:17.602+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:18.593+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:18.593+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:18.593+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:19.420+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:19.420+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:19.420+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:20.427+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:20.427+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:20.427+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:21.439+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:21.439+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:21.439+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:22.382+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:22.382+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:22.382+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:23.403+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:23.403+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:23.405+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:24.332+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:24.333+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:24.333+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:25.205+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:25.205+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:25.205+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:26.223+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:26.224+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:26.224+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:27.228+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:27.228+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:27.228+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:28.058+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:28.058+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:28.058+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:28.992+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:28.992+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:28.992+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:29.900+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:29.900+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:29.900+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+WARNING: A Java agent has been loaded dynamically (C:\Users\akin_moladun\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-10-28T23:20:30.881+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:30.883+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:30.883+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:31.810+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:31.810+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:31.810+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:32.879+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:32.882+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:32.882+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-10-28T23:20:33.888+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:33.888+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:33.888+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:34.890+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:34.890+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:34.890+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:35.826+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:35.828+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:35.829+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:36.840+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:36.840+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:36.840+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:37.859+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:37.859+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:37.859+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:38.869+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:38.870+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:38.870+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:39.695+01:00  INFO 1912 --- [ledgerx] [-auto-1-exec-13] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-10-28T23:20:39.696+01:00  INFO 1912 --- [ledgerx] [-auto-1-exec-13] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-10-28T23:20:39.703+01:00  INFO 1912 --- [ledgerx] [-auto-1-exec-13] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
+2026-10-28T23:20:39.891+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:39.891+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:39.891+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:40.763+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:40.763+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:40.764+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:41.654+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:41.654+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:41.655+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:42.704+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:42.704+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:42.704+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:43.757+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:43.759+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:43.761+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:44.656+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:44.731+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:44.731+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:45.820+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:45.822+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:45.822+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:46.823+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:46.823+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:46.823+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:47.836+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:47.837+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:47.837+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:48.860+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:48.860+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:48.860+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:49.812+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:49.812+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:49.812+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:50.761+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:50.761+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:50.761+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:51.715+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:51.718+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:51.718+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:52.588+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:52.588+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:52.588+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:53.649+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 898.6 s <<< FAILURE! -- in com.ledgerx.integration.ConcurrencyIT
+[ERROR] com.ledgerx.integration.ConcurrencyIT.hundredParallelNoDeadlockNoNegative -- Time elapsed: 59.25 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+
+expected: 201
+ but was: 500
+	at com.ledgerx.integration.ConcurrencyIT.hundredParallelNoDeadlockNoNegative(ConcurrencyIT.java:61)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+2026-10-28T23:20:55.145+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:55.145+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:55.147+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:55.147+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:55.147+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:56.163+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:56.164+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:56.165+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:57.167+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:57.167+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:57.167+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:58.147+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:58.149+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:58.149+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:20:59.011+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:20:59.011+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:20:59.011+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:00.034+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:00.034+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:00.034+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:01.040+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:01.040+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:01.040+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:01.909+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:01.909+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:01.909+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:02.772+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:02.772+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:02.772+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:03.757+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:03.758+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:03.758+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:04.815+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:04.818+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:04.818+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:05.828+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:05.828+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:05.828+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:06.829+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:06.829+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:06.829+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+2026-10-28T23:21:07.704+01:00  INFO 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Node -1 disconnected.
+2026-10-28T23:21:07.704+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Connection to node -1 (localhost/127.0.0.1:9092) could not be established. Node may not be available.
+2026-10-28T23:21:07.704+01:00  WARN 1912 --- [ledgerx] [ntainer#0-0-C-1] org.apache.kafka.clients.NetworkClient   : [Consumer clientId=consumer-audit-consumer-1, groupId=audit-consumer] Bootstrap broker localhost:9092 (id: -1 rack: null) disconnected
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   ConcurrencyIT.hundredParallelNoDeadlockNoNegative:61 
+expected: 201
+ but was: 500
+[INFO] 
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- failsafe:3.5.3:verify (default) @ ledgerx ---
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  16:50 min
+[INFO] Finished at: 2026-10-28T23:21:33+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.3:verify (default) on project ledgerx: There are test failures.
+[ERROR] 
+[ERROR] See C:\Users\akin_moladun\Downloads\LedgerX\target\failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
