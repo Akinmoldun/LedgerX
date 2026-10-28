@@ -40,7 +40,8 @@ public class Transfer {
     private TransferStatus status;
 
     /** ISO-4217; column is CHAR(3). */
-    @Column(nullable = false, columnDefinition = "char(3)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, length = 3, columnDefinition = "char(3)")
     private String currency;
 
     @Column(name = "amount_minor", nullable = false)

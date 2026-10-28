@@ -44,7 +44,8 @@ public class Account {
     private AccountType type;
 
     /** ISO-4217 code; column is CHAR(3). Never mutated after creation. */
-    @Column(nullable = false, columnDefinition = "char(3)")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(nullable = false, length = 3, columnDefinition = "char(3)")
     private String currency;
 
     @Column(name = "balance_minor", nullable = false)

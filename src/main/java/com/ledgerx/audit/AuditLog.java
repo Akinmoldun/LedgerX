@@ -39,11 +39,11 @@ public class AuditLog {
     private UUID entityId;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "before", columnDefinition = "jsonb")
     private String beforeState;
 
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
+    @Column(name = "after", columnDefinition = "jsonb")
     private String afterState;
 
     @Column
@@ -52,7 +52,8 @@ public class AuditLog {
     @Column(name = "request_id")
     private UUID requestId;
 
-    @Column
+    @JdbcTypeCode(SqlTypes.INET)
+    @Column(name = "ip", columnDefinition = "inet")
     private String ip;
 
     @Column(name = "created_at", nullable = false)
