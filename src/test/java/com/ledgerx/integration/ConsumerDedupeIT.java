@@ -12,9 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.kafka.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * Week 7 AC (§12 test #4): the same eventId published twice must produce
@@ -26,22 +27,13 @@ import org.testcontainers.kafka.KafkaContainer;
 @Testcontainers(disabledWithoutDocker = true)
 class ConsumerDedupeIT extends AbstractIntegrationTest {
 
-    private static final KafkaContainer KAFKA;
-
-    static {
-        if (dockerAvailable()) {
-            KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
-            KAFKA.start();
-        } else {
-            KAFKA = null;
-        }
-    }
+    @Container
+    static final KafkaContainer KAFKA =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
 
     @DynamicPropertySource
     static void kafkaBootstrap(DynamicPropertyRegistry registry) {
-        if (KAFKA != null) {
-            registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
-        }
+        registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
     }
 
     @Autowired

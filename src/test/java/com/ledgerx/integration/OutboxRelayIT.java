@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.DockerClientFactory;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.kafka.KafkaContainer;
 
@@ -33,24 +35,16 @@ import org.testcontainers.kafka.KafkaContainer;
  * change its host port, invalidating the advertised-listener address).
  * Skipped cleanly without Docker; always runs on a Docker machine.
  */
+@Testcontainers(disabledWithoutDocker = true)
 class OutboxRelayIT extends AbstractIntegrationTest {
 
-    private static final KafkaContainer KAFKA;
-
-    static {
-        if (dockerAvailable()) {
-            KAFKA = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
-            KAFKA.start();
-        } else {
-            KAFKA = null;
-        }
-    }
+    @Container
+    static final KafkaContainer KAFKA =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.0"));
 
     @DynamicPropertySource
     static void kafkaAndBackoff(DynamicPropertyRegistry registry) {
-        if (KAFKA != null) {
-            registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
-        }
+        registry.add("spring.kafka.bootstrap-servers", KAFKA::getBootstrapServers);
         // Faster backoff cadence ONLY in integration tests — production keeps
         // base 1s / cap 5min from application.yml.
         registry.add("ledgerx.outbox.relay-delay-ms", () -> "200");
