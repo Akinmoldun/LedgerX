@@ -1,0 +1,28 @@
+diff -ruN ph/src/main/java/com/ledgerx/outbox/OutboxRelay.java lx/LedgerX/src/main/java/com/ledgerx/outbox/OutboxRelay.java
+--- a/src/main/java/com/ledgerx/outbox/OutboxRelay.java	2026-10-29 23:27:11.023709908 +0000
++++ b/src/main/java/com/ledgerx/outbox/OutboxRelay.java	2026-10-29 23:27:11.081232947 +0000
+@@ -94,16 +94,22 @@
+                             .record(Duration.ofNanos(System.nanoTime() - started));
+                     metrics.counter("ledgerx.outbox.published", "event_type", e.getEventType()).increment();
+                 } catch (Exception ex) {
+-                    recordFailure(e, ex.getMessage());
++                    recordFailure(e, describe(ex));
+                     metrics.counter("ledgerx.outbox.failed", "event_type", e.getEventType()).increment();
+                     metrics.timer("ledgerx.outbox.publish.latency")
+                             .record(Duration.ofNanos(System.nanoTime() - started));
+                     log.warn("outbox publish failed for {} {}: {} (attempts {})",
+-                            e.getEventType(), e.getAggregateId(), ex.getMessage(),
++                            e.getEventType(), e.getAggregateId(), describe(ex),
+                             e.getAttempts() + 1);
+                     return; // broker likely down — retry on later ticks (§7.4 shape)
+                 }
+             }
+         }
+     }
++
++    /** Never null: a TimeoutException from Future.get() has no message. */
++    private static String describe(Throwable t) {
++        String message = t.getMessage();
++        return t.getClass().getSimpleName() + (message == null ? "" : ": " + message);
++    }
+ }
