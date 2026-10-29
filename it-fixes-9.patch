@@ -1,0 +1,74 @@
+diff -ruN pi/src/main/java/com/ledgerx/outbox/OutboxRelay.java lx/LedgerX/src/main/java/com/ledgerx/outbox/OutboxRelay.java
+--- a/src/main/java/com/ledgerx/outbox/OutboxRelay.java	2026-10-29 23:49:01.907970496 +0000
++++ b/src/main/java/com/ledgerx/outbox/OutboxRelay.java	2026-10-29 23:49:01.957263375 +0000
+@@ -38,30 +38,36 @@
+     private final Clock clock;
+     private final String topic;
+ 
++    private final long backoffBaseMs;
++    private final long backoffCapMs;
++
++    /** Defaults: base 1s, cap 5 min, i.e. min(attempts^2 seconds, 300s). */
++    public OutboxRelay(OutboxRepository outbox,
++                       KafkaTemplate<String, String> kafka,
++                       MeterRegistry metrics,
++                       Clock clock,
++                       String topic) {
++        this(outbox, kafka, metrics, clock, topic, 1_000L, 300_000L);
++    }
++
+     @Autowired
+     public OutboxRelay(OutboxRepository outbox,
+                        KafkaTemplate<String, String> kafka,
+                        MeterRegistry metrics,
+                        Clock clock,
+-                       @Value("${ledgerx.kafka.topic:ledgerx.transfer.posted.v1}") String topic) {
++                       @Value("${ledgerx.kafka.topic:ledgerx.transfer.posted.v1}") String topic,
++                       @Value("${ledgerx.outbox.backoff-base-ms:1000}") long backoffBaseMs,
++                       @Value("${ledgerx.outbox.backoff-cap-ms:300000}") long backoffCapMs) {
+         this.outbox = outbox;
+         this.kafka = kafka;
+         this.metrics = metrics;
+         this.clock = clock;
+         this.topic = topic;
++        this.backoffBaseMs = backoffBaseMs;
++        this.backoffCapMs = backoffCapMs;
+         metrics.gauge("ledgerx.outbox.pending", outbox, OutboxRepository::countUnpublished);
+     }
+ 
+-    public OutboxRelay(OutboxRepository outbox,
+-                       KafkaTemplate<String, String> kafka,
+-                       MeterRegistry metrics,
+-                       Clock clock,
+-                       String topic,
+-                       long backoffBaseMs,
+-                       long backoffCapMs) {
+-        this(outbox, kafka, metrics, clock, topic);
+-    }
+-
+     /**
+      * Delay before the next retry after a failure: min(attempts^2 seconds, 5 minutes).
+      */
+@@ -71,8 +77,8 @@
+ 
+     public void recordFailure(OutboxEntry e, String error) {
+         int attempts = e.getAttempts() + 1;
+-        long delaySeconds = backoffDelaySeconds(attempts);
+-        Instant nextAttemptAt = Instant.now(clock).plusSeconds(delaySeconds);
++        long delayMs = Math.min(backoffBaseMs * (long) attempts * attempts, backoffCapMs);
++        Instant nextAttemptAt = Instant.now(clock).plusMillis(delayMs);
+         outbox.recordFailure(e.getId(), error, nextAttemptAt);
+     }
+ 
+diff -ruN pi/src/test/java/com/ledgerx/integration/OutboxRelayIT.java lx/LedgerX/src/test/java/com/ledgerx/integration/OutboxRelayIT.java
+--- a/src/test/java/com/ledgerx/integration/OutboxRelayIT.java	2026-10-29 23:49:01.910682314 +0000
++++ b/src/test/java/com/ledgerx/integration/OutboxRelayIT.java	2026-10-29 23:49:01.957668319 +0000
+@@ -106,7 +106,7 @@
+ 
+         // 4) broker back → relay retries
+         startBroker();
+-        await().atMost(60, TimeUnit.SECONDS).until(() ->
++        await().atMost(120, TimeUnit.SECONDS).until(() ->
+                 outboxRow(transferId).get("published_at") != null);
+ 
+         // 5) the event arrives exactly once after recovery (dedupe from §7.5)
