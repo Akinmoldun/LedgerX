@@ -77,10 +77,11 @@ class ConcurrencyIT extends AbstractIntegrationTest {
         assertThat(bBalance).isNotNegative();
 
         // exactly 2 legs for each of the 100 transfers created by THIS test
-        Object[] idArray = transferIds.toArray(new Object[0]);
+        String placeholders = String.join(",", java.util.Collections.nCopies(transferIds.size(), "?::uuid"));
+        Object[] idArgs = transferIds.stream().map(UUID::toString).toArray();
         Integer legsForOurs = jdbc.queryForObject(
-                "SELECT count(*) FROM entries WHERE transfer_id = ANY(?::uuid[])",
-                Integer.class, idArray);
+                "SELECT count(*) FROM entries WHERE transfer_id IN (" + placeholders + ")",
+                Integer.class, idArgs);
         assertThat(legsForOurs).isEqualTo(TRANSFER_COUNT * 2);
         assertThat(transferIds).hasSize(TRANSFER_COUNT);
     }

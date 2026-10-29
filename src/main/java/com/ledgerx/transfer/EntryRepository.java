@@ -25,9 +25,9 @@ public interface EntryRepository extends JpaRepository<Entry, UUID> {
                               @Param("creditAccountId") UUID creditAccountId,
                               @Param("amountMinor") long amountMinor);
 
-    /** Explicit columns only (§2.3). */
+    /** Returns whole Entry objects (a column-list select cannot be mapped to List<Entry>). */
     @Query("""
-        select e.id, e.transferId, e.accountId, e.direction, e.amountMinor, e.createdAt
+        select e
         from Entry e
         where e.transferId = :transferId
         """)
