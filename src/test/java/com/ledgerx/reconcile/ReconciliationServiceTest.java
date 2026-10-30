@@ -49,8 +49,11 @@ class ReconciliationServiceTest {
     }
 
     private static Account createAccount(UUID id, UUID tenantId, String code, AccountType type, long balanceMinor) {
-        Account a = new Account();
         try {
+            var constructor = Account.class.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            Account a = constructor.newInstance();
+
             var fId = Account.class.getDeclaredField("id");
             fId.setAccessible(true);
             fId.set(a, id);
