@@ -73,10 +73,10 @@ class ReconciliationServiceTest {
             var fBal = Account.class.getDeclaredField("balanceMinor");
             fBal.setAccessible(true);
             fBal.setLong(a, balanceMinor);
+            return a;
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
-        return a;
     }
 
     @Test
