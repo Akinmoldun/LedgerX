@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -62,7 +61,8 @@ class TransferApiIT extends AbstractIntegrationTest {
                 INSERT INTO entries (transfer_id, account_id, direction, amount_minor)
                 VALUES (?::uuid, ?::uuid, 'debit', 3000)
                 """, transferId.toString(), fromId.toString()))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(org.springframework.dao.DataAccessException.class)
+                .hasStackTraceContaining("unbalanced transfer");
 
         // the failed insert left no entries; the transfer row itself committed
         assertThat(jdbc.queryForObject("SELECT count(*) FROM entries WHERE transfer_id = ?::uuid",

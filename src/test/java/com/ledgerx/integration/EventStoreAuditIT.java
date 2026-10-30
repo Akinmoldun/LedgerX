@@ -51,7 +51,8 @@ class EventStoreAuditIT extends AbstractIntegrationTest {
         assertThat(event.get("amount_minor")).isEqualTo("12500");
 
         Map<String, Object> audit = jdbc.queryForMap("""
-                SELECT action, entity_type, entity_id, before, after, reason
+                SELECT action, entity_type, entity_id::text AS entity_id, before::text AS before,
+                       after::text AS after, reason
                 FROM audit_log WHERE entity_type = 'TRANSFER' AND entity_id = ?::uuid
                 """, transferId.toString());
         assertThat(audit.get("action")).isEqualTo("TRANSFER_POSTED");

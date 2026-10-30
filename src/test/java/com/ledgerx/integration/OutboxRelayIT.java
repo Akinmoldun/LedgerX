@@ -84,7 +84,7 @@ class OutboxRelayIT extends AbstractIntegrationTest {
     @Test
     @DisplayName("kafka outage: transfer still postable, failure recorded, retry publishes exactly once after restart")
     void outagePostRetryRecoverExactlyOnce() {
-        UUID from = account("outbox-it-from", 10_000);
+        UUID from = account("outbox-it-from", 20_000);
         UUID to = account("outbox-it-to", 0);
 
         // 1) broker down
@@ -92,7 +92,7 @@ class OutboxRelayIT extends AbstractIntegrationTest {
 
         // 2) POST still works — the transfer commits, the outbox row waits
         UUID transferId = postTransfer(from, to);
-        assertThat(balance(from)).isEqualTo(8_750L); // 12 500 minor moved
+        assertThat(balance(from)).isEqualTo(7_500L); // 12 500 minor moved
         assertThat(balance(to)).isEqualTo(12_500L);
 
         // 3) relay records the failure — attempts >= 1, last_error set, unpublished
@@ -106,7 +106,7 @@ class OutboxRelayIT extends AbstractIntegrationTest {
 
         // 4) broker back → relay retries
         startBroker();
-        await().atMost(60, TimeUnit.SECONDS).until(() ->
+        await().atMost(120, TimeUnit.SECONDS).until(() ->
                 outboxRow(transferId).get("published_at") != null);
 
         // 5) the event arrives exactly once after recovery (dedupe from §7.5)

@@ -21,3 +21,8 @@ target/
 # OS
 .DS_Store
 Thumbs.db
+
+run*.log
+verify*.log
+phase-*.log
+*.patch
