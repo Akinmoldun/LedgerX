@@ -32,4 +32,15 @@ public interface EntryRepository extends JpaRepository<Entry, UUID> {
         where e.transferId = :transferId
         """)
     List<Entry> findByTransferId(@Param("transferId") UUID transferId);
+
+    /**
+     * Calculates the sum of credits minus sum of debits for an account across all posted entries.
+     * Note: Debits and credits are explicit directions.
+     */
+    @Query(value = """
+        SELECT COALESCE(SUM(CASE WHEN direction = 'credit' THEN amount_minor ELSE -amount_minor END), 0)
+        FROM entries
+        WHERE account_id = :accountId
+        """, nativeQuery = true)
+    long calculateNetBalanceByAccountId(@Param("accountId") UUID accountId);
 }

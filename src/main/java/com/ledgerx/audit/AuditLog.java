@@ -90,6 +90,14 @@ public class AuditLog {
                 null, afterJson, reason, null);
     }
 
+    /** Audit row for a reconciliation mismatch. */
+    public static AuditLog forReconciliationMismatch(UUID tenantId, UUID accountId, long expected, long actual, String reason) {
+        String beforeJson = "{\"balanceMinor\":" + actual + "}";
+        String afterJson = "{\"expectedBalanceMinor\":" + expected + "}";
+        return new AuditLog(tenantId, null, "RECONCILIATION_MISMATCH", "ACCOUNT", accountId,
+                beforeJson, afterJson, reason, null);
+    }
+
     public Long getId() {
         return id;
     }
