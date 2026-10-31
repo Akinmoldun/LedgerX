@@ -25,15 +25,17 @@ class ReconciliationIT extends AbstractIntegrationTest {
     @Test
     @DisplayName("Corrupt one balance manually → reconcile flags exactly that account")
     void corruptBalanceDetectedByReconcile() {
-        UUID a = account("REC-A", 10_000);
+        UUID fund = account("REC-FUND", 1_000_000); // money source; its own balance isn't under test
+        UUID a = account("REC-A", 0);
         UUID b = account("REC-B", 0);
 
-        // Execute a normal valid transfer so entries are populated
+        postTransfer(fund, a, 10_000, "fund A");        // A's 10,000 is now backed by an entry
         postTransfer(a, b, 2_500, "reconcile test");
 
-        // Normal reconciliation has 0 mismatches for these
+        // Before corruption, A must NOT be flagged
         ResponseEntity<ReconciliationResponse> initial = postReconcile();
         assertThat(initial.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(initial.getBody().mismatches()).noneMatch(m -> m.accountId().equals(a));
 
         // Manually corrupt account a's balance in the DB
         jdbc.update("UPDATE accounts SET balance_minor = balance_minor + 500 WHERE id = ?::uuid", a.toString());
