@@ -6,6 +6,12 @@ spring:
     hibernate:
       ddl-auto: validate
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+
 logging:
   level:
     com.ledgerx: INFO

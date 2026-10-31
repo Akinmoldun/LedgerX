@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
@@ -81,6 +82,14 @@ class OutboxRelayIT extends AbstractIntegrationTest {
                 .startContainerCmd(KAFKA.getContainerId()).exec();
     }
 
+    @BeforeEach
+    void clearUnpublishedOutboxBacklogFromOtherTests() {
+        // Shared Postgres container accumulates unpublished outbox rows from other ITs.
+        // Clearing unpublished entries ensures OutboxRelayIT processes its own transfer row
+        // immediately rather than timing out waiting on preceding tests' leftover rows.
+        jdbc.update("DELETE FROM outbox WHERE published_at IS NULL");
+    }
+
     @Test
     @DisplayName("kafka outage: transfer still postable, failure recorded, retry publishes exactly once after restart")
     void outagePostRetryRecoverExactlyOnce() {
@@ -138,16 +147,18 @@ class OutboxRelayIT extends AbstractIntegrationTest {
     private Map<String, Object> outboxRow(UUID transferId) {
         return jdbc.queryForMap("""
                 SELECT attempts, last_error, published_at
-                  FROM outbox
-                 WHERE aggregate_id = ?::uuid
-                   AND event_type = 'TransferPosted'
+                FROM outbox
+                WHERE aggregate_id = ?::uuid
                 """, transferId.toString());
     }
 
     private long consumedRows(UUID transferId) {
-        Long count = jdbc.queryForObject(
-                "SELECT count(*) FROM audit_log WHERE action = 'TRANSFER_POSTED_CONSUMED' AND entity_id = ?::uuid",
-                Long.class, transferId.toString());
-        return count == null ? 0L : count;
+        Long count = jdbc.queryForObject("""
+                SELECT count(*)
+                FROM audit_log
+                WHERE action = 'TRANSFER_POSTED_CONSUMED'
+                  AND entity_id = ?::uuid
+                """, Long.class, transferId.toString());
+        return count != null ? count : 0L;
     }
 }
