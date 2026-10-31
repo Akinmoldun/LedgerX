@@ -10,7 +10,7 @@
 | 06   | ✅ Approved | 2026-10-30 | Transactional outbox (V5, OutboxEntry, OutboxRelay) |
 | 07   | ✅ Approved | 2026-10-30 | Consumers + dedupe (V7, AuditConsumer, ConsumerDedupeIT) |
 | 08   | ✅ Approved | 2026-10-30 | Resilience: Kafka outage + retries (V8 next_attempt_at, OutboxRelayIT, chaos docs) |
-| 09   | 🔵 Awaiting review | — | Reconciliation + audit API |
-| 10   | ⬜ Pending | — | |
+| 09   | ✅ Approved | 2026-10-31 | Reconciliation + audit API |
+| 10   | 🔵 Awaiting review | — | Observability + docs |
 | 11   | ⬜ Pending | — | |
 | 12   | ⬜ Pending | — | |

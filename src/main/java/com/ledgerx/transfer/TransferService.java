@@ -18,7 +18,10 @@ import com.ledgerx.transfer.dto.CreateTransferRequest;
 import com.ledgerx.transfer.dto.TransferPostResult;
 import com.ledgerx.transfer.dto.TransferResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -41,12 +44,14 @@ public class TransferService {
     private final EventSequenceService sequences;
     private final OutboxRepository outbox;
     private final ObjectMapper objectMapper;
+    private final MeterRegistry meterRegistry;
 
     public TransferService(TransferRepository transfers, EntryRepository entries,
                            AccountRepository accounts, TenantRepository tenants,
                            LedgerEventRepository ledgerEvents, AuditLogRepository auditLogs,
                            EventSequenceService sequences, OutboxRepository outbox,
-                           ObjectMapper objectMapper) {
+                           ObjectMapper objectMapper,
+                           MeterRegistry meterRegistry) {
         this.transfers = transfers;
         this.entries = entries;
         this.accounts = accounts;
@@ -56,16 +61,56 @@ public class TransferService {
         this.sequences = sequences;
         this.outbox = outbox;
         this.objectMapper = objectMapper;
+        this.meterRegistry = meterRegistry;
     }
 
     /**
      * Exact shape of §7.3. Steps 8 (ledger_event), 9 (outbox) and 10 (audit_log)
-     * are deliberately omitted — they arrive in Weeks 5–6. Any step throwing
+     * are executed inside the same transaction. Any step throwing
      * rolls the whole transaction back; Kafka being unreachable cannot make a
      * transfer fail (relays are the only publishers, P5).
+     * Metrics (§10):
+     * - ledgerx.transfer.posted (counter, tag currency)
+     * - ledgerx.transfer.failed (counter, tag reason)
+     * - ledgerx.transfer.post.duration (timer)
      */
     @Transactional
     public TransferPostResult post(UUID tenantId, CreateTransferRequest req, String idempotencyKey) {
+        long startNanos = System.nanoTime();
+        try {
+            TransferPostResult result = doProcessPost(tenantId, req, idempotencyKey);
+            if (result.created()) {
+                meterRegistry.counter("ledgerx.transfer.posted", "currency", req.currency()).increment();
+            }
+            return result;
+        } catch (InsufficientFundsException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "insufficient_funds").increment();
+            throw ex;
+        } catch (CurrencyMismatchException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "currency_mismatch").increment();
+            throw ex;
+        } catch (IdempotencyKeyConflictException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "idempotency_conflict").increment();
+            throw ex;
+        } catch (SelfTransferException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "self_transfer").increment();
+            throw ex;
+        } catch (IllegalArgumentException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "invalid_argument").increment();
+            throw ex;
+        } catch (EntityNotFoundException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "not_found").increment();
+            throw ex;
+        } catch (RuntimeException ex) {
+            meterRegistry.counter("ledgerx.transfer.failed", "reason", "unexpected").increment();
+            throw ex;
+        } finally {
+            meterRegistry.timer("ledgerx.transfer.post.duration")
+                    .record(Duration.ofNanos(System.nanoTime() - startNanos));
+        }
+    }
+
+    private TransferPostResult doProcessPost(UUID tenantId, CreateTransferRequest req, String idempotencyKey) {
         // 1) Fast path — idempotent replay returns the ORIGINAL result and exits
         Optional<Transfer> existing =
                 transfers.findByTenantIdAndIdempotencyKey(tenantId, idempotencyKey);
@@ -84,9 +129,6 @@ public class TransferService {
             throw new SelfTransferException("from and to accounts must differ");
         }
         // 3) Lock both accounts in deterministic order (P6) BEFORE reading them.
-        //    Reading first (findByIdAndTenantId) would put stale copies in the
-        //    persistence context; the locking query would then hand those stale
-        //    rows back after a concurrent commit → optimistic-lock failure (500).
         Map<UUID, Account> locked = accounts
                 .lockByIdsOrdered(List.of(req.fromAccountId(), req.toAccountId())).stream()
                 .collect(Collectors.toMap(Account::getId, Function.identity()));

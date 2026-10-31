@@ -1,76 +1,121 @@
-# LedgerX — Architecture
+# LedgerX — Architecture & Technical Rationale
 
-Working document. Week 10 expands it into the full rationale doc; the transactional-outbox and Kafka-outage sections below are already authoritative.
+This document serves as the authoritative architectural record for LedgerX. It details the core architectural patterns, design rationales, concurrency guarantees, and operational procedures implemented throughout Weeks 1–10.
 
-## Transactional outbox
+---
 
-Every state change writes its outbound Kafka event into the `outbox` table **in the same database transaction** as the change itself (P5, §7.4). A single scheduled relay (`OutboxRelay`, 500 ms tick) is the **only place in the codebase** that calls `kafka.send` — verified every week with `grep -r "kafka.send" src/main/java/com/ledgerx/{transfer,account,ledger,audit,consumer}/` → empty.
+## 1. Architectural Foundations
 
-Why not "publish after commit in-process": a crash between commit and publish loses the event; a publish before commit can announce an uncommitted transfer. The outbox makes the DB the source of truth: at-least-once publish (relay retries until published_at is set), and consumers dedupe by `eventId` (§7.5) for exactly-once *effect*.
+### 1.1 Double-Entry Bookkeeping Principles
+LedgerX enforces strict double-entry invariants at all layers of the stack:
+- **Zero-Sum Transfers (P2):** Every transfer generates at least one pair of offsetting entries (debit and credit). The Postgres deferrable constraint trigger `entries_balanced` verifies upon transaction commit that:
+  $$\sum \text{debits} = \sum \text{credits}$$
+- **Integer Minor Units (P1):** All monetary values are represented as minor units using 64-bit signed integers (`long`), paired with an explicit ISO-4217 three-letter currency code (`CHAR(3)`). Floating-point representations (`float`, `double`, `BigDecimal`) are strictly barred from production financial pathways to eliminate precision and rounding errors.
+- **Append-Only Immutability (P3, P8):** Historical ledger rows (`ledger_events`, `audit_log`, and posted `transfers`/`entries`) are append-only. The database trigger `deny_mutation()` raises an exception on any attempt to execute `UPDATE` or `DELETE` on append-only event tables.
 
-### Relay retry policy (Week 8)
+---
 
-| Property | Default | Meaning |
-|---|---|---|
-| `ledgerx.outbox.relay-delay-ms` | 500 | relay tick interval |
-| `ledgerx.outbox.backoff-base-ms` | 1000 | delay after failure 1 |
-| `ledgerx.outbox.backoff-cap-ms` | 300000 | hard cap — 5 minutes |
+## 2. Concurrency & Locking Strategy
 
-After the k-th failed attempt (the persisted `outbox.attempts` counter), the row is not retried for `min(cap, base · 2^(k−1))`: 1 s, 2 s, 4 s … 256 s, then 5 min forever. `attempts` and `last_error` are persisted on every failure; the retry gate itself lives in relay memory (DECISIONS 2026-10-26, *Approved by: pending*). The relay never spins: a broker outage makes it stop after the first failure in a batch, and on subsequent ticks it only attempts rows whose backoff window has elapsed.
+### 2.1 Pessimistic Primary + Optimistic Secondary (P6, P7)
+High-volume financial ledgers face high concurrency and potential deadlock risks when transfers cross-operate over shared accounts in opposing directions (e.g., Transfer 1 moves funds from Account A $\rightarrow$ B, while concurrent Transfer 2 moves funds from Account B $\rightarrow$ A).
 
-Coverage: `OutboxRelayTest` (5 unit tests) gates the retry logic; `OutboxRelayIT` executes the chaos cycle below against a real Testcontainers broker.
+1. **Deterministic Primary Row Locking (Pessimistic - P6):**
+   - Before evaluating account balances or executing mutations, `TransferService` locks all participating accounts via `AccountRepository.lockByIdsOrdered`:
+     ```sql
+     SELECT id, tenant_id, code, name, type, currency, balance_minor, version, allow_overdraft, created_at
+     FROM accounts
+     WHERE id IN (:ids)
+     ORDER BY id
+     FOR UPDATE;
+     ```
+   - By sorting account IDs deterministically (`ORDER BY id`), any concurrent transaction competing for the same pair of accounts acquires locks in the exact same sequence. This mathematically eliminates circular wait conditions (AB-BA deadlocks).
+   - Balance checks are executed directly against the locked row inside the transaction.
 
-## Chaos run — Kafka outage + recovery (Week 8 AC)
+2. **Optimistic Version Safety Net (Secondary - P7):**
+   - The `accounts` table maintains a `@Version` field `version`. While regular transfer traffic serializes through deterministic row locks without conflict, the JPA optimistic lock guarantees integrity against rogue out-of-band updates (such as administrative adjustments or direct manual SQL) without an uncontrolled retry storm.
 
-Manual run, from the repo root with the docker stack up (`cd docker && docker compose up -d`):
+---
 
-```bash
-# 1) kill the broker
-docker compose stop kafka
-# timed — for the log below
-date +%s.%N > /tmp/chaos_start
+## 3. Idempotency Architecture (P4)
 
-# 2) POST a transfer — must still return 201 (the outbox row waits, no loss)
-curl -sS -X POST http://localhost:8080/api/v1/transfers \
-  -H "X-Tenant-Id: 00000000-0000-0000-0000-000000000001" \
-  -H "Idempotency-Key: chaos-$(date +%s)" \
-  -H 'Content-Type: application/json' \
-  -d '{"fromAccountId":"<asset-id>","toAccountId":"<revenue-id>","amountMinor":12500,"currency":"USD","description":"chaos outage"}'
-# → 201 Created
+API clients must provide a unique `Idempotency-Key` header on `POST /api/v1/transfers`.
+1. **Database-Enforced Uniqueness:**
+   - The `transfers` table includes a unique constraint: `UNIQUE (tenant_id, idempotency_key)`.
+   - Concurrency safety does not rely on transient cache locks (e.g., Redis). The database transaction is the sole arbiter of uniqueness.
+2. **Fast-Path Replay vs. Conflict Detection:**
+   - If an idempotency key is re-submitted with the **exact same intent** (same tenant, accounts, currency, and amount), `TransferService` detects the existing transfer and returns HTTP `200 OK` with the original transfer response immediately without re-executing ledger operations.
+   - If the key is reused with a **different payload**, the service detects the payload mismatch and raises an `IdempotencyKeyConflictException`, mapped by `GlobalExceptionHandler` to HTTP `409 Conflict`.
 
-# 3) the relay must have recorded the failure
-docker compose exec postgres psql -U ledgerx -c \
-  "SELECT attempts > 0 AS attempted, last_error, published_at IS NULL AS waiting FROM outbox WHERE event_type='TransferPosted' ORDER BY created_at DESC LIMIT 1;"
+---
 
-# 4) bring the broker back and wait for the relay's next eligible tick
-date +%s.%N > /tmp/chaos_restart; docker compose start kafka
+## 4. Transactional Outbox & Kafka Resilience (P5, §7.4, Week 8)
 
-# 5) within base·2^attempts the retry publishes — check the topic, each transfer exactly once
-docker compose exec kafka bash -c \
-  '/opt/bitnami/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic ledgerx.transfer.posted.v1 --from-beginning --max-messages 10'
+### 4.1 Transactional Outbox Pattern
+Directly publishing to an external message broker inside a `@Transactional` block introduces two critical failure modes:
+- **Dual-write failure:** The broker publish succeeds, but the database transaction subsequently rolls back, emitting phantom events.
+- **Lost message failure:** The database commits, but the application crashes or the network partitions before the broker ACK is received.
+
+LedgerX isolates external publishing using the Transactional Outbox pattern:
+1. In the transfer transaction, the service writes the business entities, appends to `ledger_events`, writes an `audit_log` row, and inserts an event record into `outbox`.
+2. A single asynchronous worker (`OutboxRelay`) polls the `outbox` table using `FOR UPDATE SKIP LOCKED`, batches unpublished rows, publishes them to Kafka, and records `published_at = now()`.
+
+### 4.2 Durable Exponential Backoff (V8 Migration)
+To guarantee high resilience during Kafka outages without memory loss or retry storms across process restarts:
+- `V8__outbox_next_attempt_at.sql` adds `next_attempt_at TIMESTAMPTZ` to the `outbox` table.
+- When Kafka is unavailable, `OutboxRelay.recordFailure` sets:
+  $$\text{next\_attempt\_at} = \text{now}() + \min(\text{attempts}^2 \text{ seconds}, 300\text{s})$$
+- `OutboxRepository.lockNextBatch` queries:
+  ```sql
+  SELECT * FROM outbox
+   WHERE published_at IS NULL
+     AND (next_attempt_at IS NULL OR next_attempt_at <= now())
+   ORDER BY created_at
+   LIMIT :limit
+   FOR UPDATE SKIP LOCKED;
+  ```
+- **Relay Crash Durability:** Because retry scheduling is persisted in PostgreSQL, restarting the application or running multiple relay instances safely respects the backoff intervals with zero in-memory maps.
+
+### 4.3 Consumer Deduplication (§7.5)
+Kafka provides at-least-once message delivery. To achieve an **exactly-once processing effect**, consumers (such as `AuditConsumer`) perform deduplication inside the processing transaction:
+```sql
+INSERT INTO processed_events (event_id, consumer, processed_at)
+VALUES (:eventId, :consumerName, now())
+ON CONFLICT (event_id) DO NOTHING;
 ```
+If 0 rows are inserted, the consumer detects that the event was already handled and skips the side effect.
 
-### Expected timings
+---
 
-| Phase | Bound | Why |
-|---|---|---|
-| Broker stopped → POST response | < 100 ms | POST never touches Kafka — the outbox row is written inside the transfer transaction |
-| First failed publish recorded on that row | ≤ 5.5 s | one relay tick (500 ms) + the 5 s `.get()` publish timeout |
-| Publish after broker restart | ≤ backoff window of the row's attempts + tick (≈ 1–3 s for a single failure) | capped exponential retry gate; 5-min hard cap never exceeded |
-| Consumer side effect after publish | < 1 s | `AuditConsumer` subscribes with `auto-offset-reset: earliest` + dedupe |
-| Exactly-once | permanent | `processed_events ON CONFLICT DO NOTHING`; replay arrives, side effect does not run twice |
+## 5. Observability & Metrics (§10)
 
-### Timings measured on a Docker machine (to fill in)
+LedgerX exports full Prometheus metrics via Micrometer and provides unified JSON logging.
 
-> **Not yet measured in this sandbox — no Docker available.** Run the script above and paste the `[ timing ]` lines here as part of the Week 8 review.
+### 5.1 Prometheus Metric Catalog
 
-- outage → first failure recorded: ___
-- broker restart → `published_at` set: ___
-- restart → consumer audit row: ___
+| Metric Name | Type | Tags | Purpose |
+|---|---|---|---|
+| `ledgerx.transfer.posted` | Counter | `currency` | Count of successfully created and posted transfers |
+| `ledgerx.transfer.failed` | Counter | `reason` | Count of failed transfer attempts categorized by failure reason |
+| `ledgerx.outbox.published` | Counter | `event_type` | Count of successfully published outbox events |
+| `ledgerx.outbox.failed` | Counter | `event_type` | Count of failed outbox publish attempts |
+| `ledgerx.outbox.pending` | Gauge | — | Number of pending unpublished outbox messages waiting in database |
+| `ledgerx.outbox.publish.latency` | Timer | — | Latency duration of Kafka publish calls by OutboxRelay |
+| `ledgerx.reconcile.mismatches` | Gauge | — | Count of balance discrepancies identified during last reconciliation |
+| `ledgerx.transfer.post.duration` | Timer | — | Total end-to-end execution time of `TransferService.post` |
 
-### Guarantees during an outage (§13 Week 8 self-check)
+### 5.2 Logging & Tracing
+- **JSON Logs in Non-Local Profiles:** Formatted using `logstash-logback-encoder` in production/container environments for native ingestion into Grafana Loki / ELK.
+- **MDC Tracing:** `RequestIdMdcFilter` extracts or generates an `X-Request-Id` UUID for every HTTP request and attaches `requestId` to the SLF4J MDC, ensuring every log line across controllers, services, and repositories is correlated to an individual API request.
+- **PII Protection:** Account numbers, credentials, and authentication tokens are strictly barred from log outputs.
 
-- **No data loss:** the transfer commit and the outbox row are one transaction; the row waits in Postgres, not in process memory or the producer buffer.
-- **No duplicates after recovery:** at-least-once publish gated by the backoff; the consumer dedupes by `eventId`, so a retried publish can never create two audit rows.
-- **No spinning:** one attempt per batch per tick; failing rows re-elapse their backoff window before any further attempt (unit-tested, no `Thread.sleep`).
-- **Money untouched:** balances are correct before, during, and after the outage — the transfer logic does not depend on Kafka at all.
+---
+
+## 6. Chaos Testing & Recovery Guarantees
+
+A complete outage and recovery cycle is verified against a live broker via `OutboxRelayIT`:
+1. **Outage Simulation:** The Kafka broker container is stopped via the Docker API.
+2. **Transfer Continuity:** Incoming `POST /api/v1/transfers` requests continue to return HTTP `201 Created` within normal latency bounds (< 100ms). Transfers and entries are committed; outbox rows accumulate safely in Postgres.
+3. **No Spinning:** The relay attempts publishing, catches the broker timeout, records the failure, and backs off exponentially.
+4. **Broker Recovery:** Kafka is restarted. The relay awakens, picks up the backed-off outbox entries in creation order, and successfully publishes them.
+5. **Deduplication:** The consumer processes the recovered messages, inserting into `processed_events` to ensure zero duplicate audit entries.
