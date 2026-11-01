@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,9 +24,11 @@ import org.springframework.http.ResponseEntity;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         properties = {
                 "management.endpoints.web.exposure.include=health,info,prometheus",
-                "management.endpoint.prometheus.enabled=true"
+                "management.endpoint.prometheus.enabled=true",
+                "management.prometheus.metrics.export.enabled=true"
         }
 )
+@AutoConfigureObservability
 class ObservabilityIT extends AbstractIntegrationTest {
 
     @Test
