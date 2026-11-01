@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,13 @@ import org.springframework.http.ResponseEntity;
  * Validates that /actuator/prometheus exposes the §10 metrics and that
  * the RequestIdMdcFilter sets the X-Request-Id header on HTTP responses.
  */
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {
+                "management.endpoints.web.exposure.include=health,info,prometheus",
+                "management.endpoint.prometheus.enabled=true"
+        }
+)
 class ObservabilityIT extends AbstractIntegrationTest {
 
     @Test
