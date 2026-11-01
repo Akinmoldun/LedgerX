@@ -2,7 +2,7 @@ spring:
   application:
     name: ledgerx
   kafka:
-    bootstrap-servers: ${LEDGERX_KAFKA_BOOTSTRAP:localhost:9092}
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:${LEDGERX_KAFKA_BOOTSTRAP:localhost:9092}}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -12,9 +12,9 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       auto-offset-reset: earliest
   datasource:
-    url: ${LEDGERX_DB_URL:jdbc:postgresql://localhost:5432/ledgerx}
-    username: ${LEDGERX_DB_USER:ledgerx}
-    password: ${LEDGERX_DB_PASSWORD:ledgerx}
+    url: ${DB_URL:${LEDGERX_DB_URL:jdbc:postgresql://localhost:5432/ledgerx}}
+    username: ${DB_USER:${LEDGERX_DB_USER:ledgerx}}
+    password: ${DB_PASSWORD:${LEDGERX_DB_PASSWORD:ledgerx}}
   jpa:
     hibernate:
       ddl-auto: validate

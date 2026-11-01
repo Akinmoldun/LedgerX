@@ -1,0 +1,39 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DB_URL:${LEDGERX_DB_URL}}
+    username: ${DB_USER:${LEDGERX_DB_USER}}
+    password: ${DB_PASSWORD:${LEDGERX_DB_PASSWORD}}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+      minimum-idle: 2
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:${LEDGERX_KAFKA_BOOTSTRAP}}
+    properties:
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:SASL_SSL}
+      sasl.mechanism: ${KAFKA_SASL_MECHANISM:SCRAM-SHA-256}
+      sasl.jaas.config: ${KAFKA_JAAS_CONFIG:org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_SASL_USERNAME:}" password="${KAFKA_SASL_PASSWORD:}";}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: INFO
+    com.ledgerx: INFO
