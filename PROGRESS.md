@@ -12,5 +12,5 @@
 | 08   | ✅ Approved | 2026-10-30 | Resilience: Kafka outage + retries (V8 next_attempt_at, OutboxRelayIT, chaos docs) |
 | 09   | ✅ Approved | 2026-10-31 | Reconciliation + audit API |
 | 10   | ✅ Approved | — | Observability + docs |
-| 11   | ⬜ Pending | — | |
-| 12   | ⬜ Pending | — | |
+| 11   | ✅ Approved | 2026-11-02 | Deployment artifacts & Fly.io live |
+| 12   | 🔵 Awaiting review | — | Polish + Demo |
