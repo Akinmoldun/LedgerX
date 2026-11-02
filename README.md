@@ -3,8 +3,6 @@
 Production-grade double-entry financial ledger API featuring transactional outbox, deterministic locking, append-only event logging, exactly-once consumer deduplication, and automated balance reconciliation.
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Swagger%20UI-success?logo=swagger)](https://ledgerx.fly.dev/swagger-ui.html)
-[![Demo Video](https://img.shields.io/badge/YouTube-Watch%202--Min%20Demo-red?logo=youtube)](https://www.youtube.com/watch?v=DEMO_PLACEHOLDER)
-[![Engineering Blog](https://img.shields.io/badge/Dev.to-Read%20Engineering%20Deep%20Dive-black?logo=devdotto)](https://dev.to/akinmoldun/how-i-built-exactly-once-payments-with-the-transactional-outbox-pattern-PLACEHOLDER)
 [![Java 21](https://img.shields.io/badge/Java-21%20LTS-blue.svg)](https://adoptium.net)
 [![Spring Boot 3.4](https://img.shields.io/badge/Spring%20Boot-3.4.5-brightgreen.svg)](https://spring.io/projects/spring-boot)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org)
@@ -66,8 +64,15 @@ flowchart TD
 - **Trade-off:** Under high concurrency opposing transfers ($A \rightarrow B$ and $B \rightarrow A$), optimistic locking suffers from high rollback and retry storm rates. Deterministic lock ordering mathematically guarantees zero deadlocks at the cost of short serialized lock hold times per account.
 
 ### 3. Messaging: Transactional Outbox vs. Direct Kafka Publish
-- **Decision:** Direct Kafka publishing inside `@Transactional` methods is strictly forbidden. Events are written to the PostgreSQL `outbox` table within the payment transaction, and drained by an asynchronous `OutboxRelay` using `FOR UPDATE SKIP LOCKED`.
+- **Decision:** Kafka is never called inside the transfer transaction. Events are written to the PostgreSQL `outbox` table within the payment transaction, and drained by an asynchronous `OutboxRelay` using `FOR UPDATE SKIP LOCKED`.
 - **Trade-off:** Introduces a ~500ms asynchronous propagation delay, but completely eliminates the dual-write problem. Customer transfers succeed with HTTP 201 even during catastrophic Kafka broker outages.
+
+---
+
+## Delivery Guarantees
+
+- **Publishing (At-Least-Once):** The transactional outbox pattern guarantees at-least-once publishing to Apache Kafka. Kafka is never called inside the transfer transaction. If the relay encounters network timeouts or broker partitions during delivery acknowledgment, it retries with durable exponential backoff, which may produce duplicate published messages.
+- **Consumption (Exactly-Once Effect):** Downstream consumers achieve an end-to-end exactly-once processing effect by recording handled message identifiers in the `processed_events` table (`ON CONFLICT (event_id, consumer_group) DO NOTHING`) within their local database transaction before executing any side effects.
 
 ### 4. Resilience: Durable Exponential Backoff in SQL
 - **Decision:** Outbox retry state (`attempts`, `last_error`, `next_attempt_at`) is maintained directly in PostgreSQL (`V8__outbox_next_attempt_at.sql`). Delay expands as $\min(300, \text{attempts}^2)$ seconds.

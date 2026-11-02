@@ -37,7 +37,7 @@ Consider the failure modes:
 - **Scenario B:** You publish to Kafka at the end of the method. The Kafka send succeeds, but when Hibernate issues the final `COMMIT` to PostgreSQL, a database constraint fails or the connection drops. You just broadcasted a payment that does not exist in the ledger.
 - **Scenario C:** Kafka is temporarily down for maintenance. Your entire payment API returns HTTP 500, rejecting transfers even though your database is completely healthy.
 
-Never call a message broker inside an open database transaction.
+Kafka is never called inside the transfer transaction.
 
 ---
 
@@ -103,7 +103,7 @@ LIMIT 50
 FOR UPDATE SKIP LOCKED;
 ```
 
-`SKIP LOCKED` allows instance A to lock rows 1–50 while instance B concurrently processes rows 51–100 without blocking or waiting.
+`SKIP LOCKED` allows instance A to lock rows 1 to 50 while instance B concurrently processes rows 51 to 100 without blocking or waiting.
 
 ### 2. Durable Exponential Backoff in SQL
 If Kafka goes down, an unconstrained relay will spin in a tight CPU loop, flooding logs with connection errors.
@@ -118,10 +118,10 @@ ALTER TABLE outbox
 
 When a publish fails, the delay expands exponentially: $\text{delay} = \min(300, \text{attempts}^2)$ seconds. The poller query simply excludes rows where `next_attempt_at > NOW()`, letting failing rows rest while fresh transactions continue flowing.
 
-### 3. Idempotent Consumer Deduplication
-The Outbox pattern guarantees **at-least-once delivery**. Network partitions during the ACK phase can cause a message to be published twice.
+### 3. Delivery Guarantees: At-Least-Once Outbox and Exactly-Once Effect
+The outbox pattern guarantees **at-least-once publishing**. Network partitions or restarts during broker acknowledgment can cause a message to be published more than once. Kafka is never called inside the transfer transaction.
 
-To achieve end-to-end **exactly-once semantics**, the consumer tracks processed message IDs using an atomic deduplication table:
+To achieve an end-to-end **exactly-once processing effect**, consumers track processed message IDs using an atomic deduplication table:
 
 ```sql
 INSERT INTO processed_events (event_id, consumer_group, processed_at)

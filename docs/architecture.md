@@ -52,7 +52,7 @@ API clients must provide a unique `Idempotency-Key` header on `POST /api/v1/tran
 ## 4. Transactional Outbox & Kafka Resilience
 
 ### 4.1 Transactional Outbox Pattern
-Directly publishing to an external message broker inside a `@Transactional` block introduces two critical failure modes:
+Kafka is never called inside the transfer transaction. Directly publishing to an external message broker inside the business transaction introduces two critical failure modes:
 - **Dual-write failure:** The broker publish succeeds, but the database transaction subsequently rolls back, emitting phantom events.
 - **Lost message failure:** The database commits, but the application crashes or the network partitions before the broker ACK is received.
 
@@ -84,6 +84,10 @@ VALUES (:eventId, :consumerName, now())
 ON CONFLICT (event_id) DO NOTHING;
 ```
 If 0 rows are inserted, the consumer detects that the event was already handled and skips the side effect.
+
+### 4.4 Delivery Guarantees
+- **At-Least-Once Publishing:** Kafka is never called inside the transfer transaction. The outbox relay provides at-least-once publishing guarantees to Kafka by storing events in the database and retrying failed dispatches with durable exponential backoff.
+- **Exactly-Once Processing Effect:** Consumers achieve an end-to-end exactly-once processing effect by recording event IDs in the `processed_events` table (`ON CONFLICT DO NOTHING`) in the same database transaction that applies consumer side effects.
 
 ---
 
