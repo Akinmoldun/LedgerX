@@ -84,7 +84,7 @@ primary_region = 'lhr'
   processes = ['app']
 
   [[http_service.checks]]
-    grace_period = '30s'
+    grace_period = '60s'
     interval = '15s'
     method = 'GET'
     timeout = '5s'
@@ -94,7 +94,6 @@ primary_region = 'lhr'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
-  memory_mb = 1024
 ```
 
 ---
@@ -107,7 +106,7 @@ Deploy the containerized application using Fly's remote Docker builder:
 fly deploy
 ```
 
-Fly builds the multi-stage `Dockerfile` (which builds with Temurin 21 and drops to non-root `USER 1000`), uploads the image, starts the machine, executes Flyway database migrations up to V8, and checks `/actuator/health`.
+Fly builds the multi-stage `Dockerfile` (which builds with Temurin 21 and drops to non-root `USER 10001`), uploads the image, starts the machine, executes Flyway database migrations up to V8, and checks `/actuator/health`.
 
 ---
 
