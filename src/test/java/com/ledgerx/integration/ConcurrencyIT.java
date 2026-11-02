@@ -20,10 +20,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Week 4 AC (§12 test #2): 100 parallel transfers → no negative balance, no
- * deadlock. Transfers alternate directions on the SAME account pair so
- * concurrent transfers hit both lock orders — the deterministic
- * `lockByIdsOrdered` (ORDER BY id) is what makes this deadlock-free (P6).
+ * Concurrency integration test: 100 parallel transfers produce no negative balance and no
+ * deadlock. Transfers alternate directions on the same account pair so
+ * concurrent requests test opposing lock acquisition orders: deterministic
+ * lockByIdsOrdered (ORDER BY id) prevents deadlocks by establishing a global lock order.
  */
 class ConcurrencyIT extends AbstractIntegrationTest {
 
@@ -32,7 +32,7 @@ class ConcurrencyIT extends AbstractIntegrationTest {
     private static final long INITIAL_EACH = 1_000_000;
 
     @Test
-    @DisplayName("100 parallel transfers both directions → no deadlock, no negative balance, sum invariant")
+    @DisplayName("100 parallel transfers both directions: no deadlock, no negative balance, sum invariant")
     void hundredParallelNoDeadlockNoNegative() throws Exception {
         UUID a = account("A", INITIAL_EACH);
         UUID b = account("B", INITIAL_EACH);

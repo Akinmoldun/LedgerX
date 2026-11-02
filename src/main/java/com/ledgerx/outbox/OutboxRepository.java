@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-/** All queries explicit columns — no `SELECT *` (§2.3), ORDER BY + SKIP LOCKED for relay safety (P5). */
+/** Outbox repository with deterministic ordering and SKIP LOCKED for multi-instance concurrency safety. */
 public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
 
     /**
      * Pick the next batch of unpublished rows whose backoff has elapsed.
      * `ORDER BY created_at` with `FOR UPDATE SKIP LOCKED` lets several relay instances run safely:
-     * locked rows are invisible to every other relay (§7.4).
+     * locked rows are skipped by other concurrent relay instances.
      */
     @Query(value = """
         SELECT * FROM outbox
@@ -26,7 +26,7 @@ public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
         """, nativeQuery = true)
     List<OutboxEntry> lockNextBatch(@Param("limit") int limit);
 
-    /** Only after the 5-second-bounded publish succeeded (§7.4 self-check). */
+    /** Updates row status once published to the broker. */
     @Modifying
     @Query(value = """
         UPDATE outbox
@@ -35,7 +35,7 @@ public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
         """, nativeQuery = true)
     void markPublished(@Param("id") UUID id, @Param("publishedAt") Instant publishedAt);
 
-    /** Publish failed — keep the row unpublished, bump attempts, store the reason and next retry time. */
+    /** Publish failed: keep the row unpublished, increment attempts, and persist error with backoff timestamp. */
     @Modifying
     @Query(value = """
         UPDATE outbox
@@ -48,7 +48,7 @@ public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
         recordFailure(id, error, null);
     }
 
-    /** Backing query for the `ledgerx.outbox.pending` gauge (§10). */
+    /** Backing query for unpublished outbox gauge metric. */
     @Query(value = "SELECT count(*) FROM outbox WHERE published_at IS NULL", nativeQuery = true)
     long countUnpublished();
 }

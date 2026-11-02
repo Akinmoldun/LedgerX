@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Dedupe table access (§7.5). The insert is atomic: `ON CONFLICT DO NOTHING`
- * plus the returned row count decide "first time" vs "already processed" in
- * one statement — no check-then-insert race.
+ * Deduplication table access. The insert is atomic: `ON CONFLICT DO NOTHING`
+ * plus the returned row count determine whether the event is new or already processed
+ * in a single statement, avoiding check-then-act race conditions.
  */
 public interface ProcessedEventRepository extends JpaRepository<ProcessedEvent, UUID> {
 

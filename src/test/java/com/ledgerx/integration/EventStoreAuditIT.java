@@ -17,9 +17,8 @@ import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Week 5 AC: after POST → 1 transfer, 2 entries, 1 ledger_event, 1 audit_log;
- * `deny_mutation` throws on UPDATE attempt AND on DELETE attempt (two
- * separate tests).
+ * Event store and audit integration test: a posted transfer generates one transfer,
+ * two entries, one ledger event, and one audit log in a single transaction.
  */
 class EventStoreAuditIT extends AbstractIntegrationTest {
 

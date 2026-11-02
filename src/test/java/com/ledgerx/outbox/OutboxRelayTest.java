@@ -27,11 +27,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Unit tests (§12): the relay publishes to Kafka and ONLY THEN marks the row
- * published; on broker failure it records the failure and never marks it.
- * Week 8 adds the exponential retry backoff (attempts^2 seconds capped at 5min).
- * Time-dependent behaviour is tested by advancing an injected mutable Clock —
- * never with Thread.sleep (§2.3). The real broker arrives via OutboxRelayIT.
+ * Unit tests: the relay publishes to Kafka and only then marks the row
+ * published; on broker failure it records the failure with exponential backoff and never marks it published.
+ * Time-dependent behaviour is tested by advancing an injected mutable Clock rather than sleeping.
  */
 @ExtendWith(MockitoExtension.class)
 class OutboxRelayTest {
@@ -44,7 +42,7 @@ class OutboxRelayTest {
     @Mock
     org.springframework.kafka.core.KafkaTemplate<String, String> kafka;
 
-    /** Mutable clock so unit tests can advance time without sleeping (§2.3). */
+    /** Mutable clock so unit tests can advance time deterministically. */
     private static final class AdjustableClock extends Clock {
         private final AtomicReference<Instant> now = new AtomicReference<>(FIXED);
 
@@ -89,7 +87,7 @@ class OutboxRelayTest {
         relay(new AdjustableClock()).relay();
 
         verify(kafka).send("ledgerx.transfer.posted.v1", e.getAggregateId().toString(), e.getPayload());
-        // publish FIRST, markPublished SECOND (the ordering most tutorials get wrong, §7.4)
+        // publish first, mark published second
         InOrder order = inOrder(kafka, outbox);
         order.verify(kafka).send(anyString(), anyString(), anyString());
         order.verify(outbox).markPublished(eq(e.getId()), eq(FIXED));

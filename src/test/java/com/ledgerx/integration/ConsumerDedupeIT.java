@@ -19,11 +19,9 @@ import org.testcontainers.kafka.ConfluentKafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /**
- * Week 7 AC (§12 test #4): the same eventId published twice must produce
- * exactly ONE audit row — dedupe via processed_events ON CONFLICT DO NOTHING
- * in the same transaction as the side effect. Uses a REAL broker (§12 rule)
- * via Testcontainers; skipped cleanly without Docker, always runs on a
- * Docker machine.
+ * Consumer deduplication integration test: the same eventId published twice must produce
+ * exactly ONE audit row: deduplication via processed_events ON CONFLICT DO NOTHING
+ * occurs in the same transaction as the side effect.
  */
 @Testcontainers
 class ConsumerDedupeIT extends AbstractIntegrationTest {
@@ -55,7 +53,7 @@ class ConsumerDedupeIT extends AbstractIntegrationTest {
         await().atMost(30, TimeUnit.SECONDS).until(() ->
                 consumedRows(transferId) == 1L);
 
-        // settle a bit longer — a duplicate side effect would push the count to 2
+        // settle a bit longer - a duplicate side effect would push the count to 2
         await().atLeast(2, TimeUnit.SECONDS);
         assertThat(consumedRows(transferId)).isEqualTo(1L);
     }

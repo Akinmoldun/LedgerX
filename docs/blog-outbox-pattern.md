@@ -1,6 +1,6 @@
 # How I Built Exactly-Once Payments with the Transactional Outbox Pattern
 
-*By Akinmoladun Damilare — Solo Builder of LedgerX*
+*By Akinmoladun Damilare - Solo Builder of LedgerX*
 
 When building a core financial ledger, the single most dangerous line of code you can write looks completely harmless:
 
@@ -20,7 +20,7 @@ public TransferResponse postTransfer(TransferRequest request) {
 
 It looks clean. It passes unit tests. And in production, it will inevitably corrupt your financial system.
 
-Here is the story of how I encountered the classic **Dual-Write Problem** while designing [LedgerX](https://github.com/Akinmoldun/LedgerX) — a double-entry ledger engine — and how implementing the **Transactional Outbox Pattern** gave me verifiable, crash-resilient exactly-once semantics.
+Here is the story of how I encountered the classic **Dual-Write Problem** while designing [LedgerX](https://github.com/Akinmoldun/LedgerX) - a double-entry ledger engine - and how implementing the **Transactional Outbox Pattern** gave me verifiable, crash-resilient exactly-once semantics.
 
 ---
 

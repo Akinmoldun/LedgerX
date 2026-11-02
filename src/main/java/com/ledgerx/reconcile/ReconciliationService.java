@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Reconciliation service (§7.6, Week 9).
+ * Reconciliation service.
  * Verifies that accounts.balance_minor equals the sum of credits minus debits from entries.
  * Read-only against accounts/entries; records an audit log row and updates the gauge metric
  * when a mismatch is discovered.

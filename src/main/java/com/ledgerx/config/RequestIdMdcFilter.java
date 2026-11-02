@@ -16,7 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * Filter that populates the SLF4J MDC with a {@code requestId} for every incoming HTTP request.
  * Reads {@code X-Request-Id} from the incoming headers or generates a random UUID.
- * Clears MDC upon request completion (§10, Week 10).
+ * Clears MDC upon request completion to prevent context leakage across pooled threads.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)

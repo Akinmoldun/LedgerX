@@ -1,4 +1,4 @@
-# LedgerX — Production Deployment Guide (Fly.io)
+# LedgerX - Production Deployment Guide (Fly.io)
 
 This guide provides step-by-step instructions to deploy LedgerX to production on [Fly.io](https://fly.io) with managed PostgreSQL and Apache Kafka.
 
@@ -54,7 +54,7 @@ fly secrets set \
 ```
 
 > [!IMPORTANT]
-> - Always append `?sslmode=require` to your PostgreSQL JDBC URL in production (§11).
+> - Always append `?sslmode=require` to your PostgreSQL JDBC URL in production.
 > - Never hardcode or commit these values into files or git.
 > - `fly secrets set` automatically redeploys machines if they are already running.
 

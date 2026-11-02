@@ -12,9 +12,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 /**
- * Append-only event log row (P3). The migration installs `deny_mutation`
- * triggers for UPDATE and DELETE — Java never mutates a stored event, and any
- * attempt anywhere fails at the DB level.
+ * Append-only event log row. Database triggers reject UPDATE and DELETE
+ * operations to guarantee that historical ledger events remain completely immutable.
  */
 @Entity
 @Table(name = "ledger_events")

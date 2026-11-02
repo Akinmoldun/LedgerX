@@ -20,7 +20,7 @@ class AccountTest {
     }
 
     // Tests construct via backdoor setters because the entity deliberately has
-    // no public setters on financial fields (§7.1); production code paths never
+    // no public setters on financial fields to preserve domain invariants; production code paths never
     // do this.
     private static void setBalance(Account a, long balanceMinor) {
         try {

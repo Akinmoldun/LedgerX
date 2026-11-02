@@ -23,17 +23,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 /**
- * Week 4 property test (jqwik). For any random sequence of N transfers
- * (1 ≤ N ≤ 20) between a pool of 3 accounts, verify:
+ * Property-based testing for transfer ledger invariants (jqwik). For any random sequence of N transfers
+ * between a pool of accounts, verify:
  *
  * (a) per transfer, debit sum == credit sum over its entries,
- * (b) the sum of `accounts.balance_minor` across all accounts is invariant,
- * (c) every `transfer.id` appears in exactly 2 entries.
- *
- * NOTE: jqwik runs on its own JUnit engine, which does not apply Spring's
- * {@code SpringExtension} — so this class bootstraps the app + its own
- * Postgres container manually instead of extending {@link
- * AbstractIntegrationTest}.
+ * (b) the sum of ccounts.balance_minor across all accounts is invariant,
+ * (c) every 	ransfer.id appears in exactly 2 entries.
  */
 class TransferInvariantsIT {
 
@@ -88,7 +83,7 @@ class TransferInvariantsIT {
             transferIds.add(result.transfer().id());
         }
 
-        // (c) exactly 2 entries per transfer — and (a) legs balance per transfer
+        // (c) exactly 2 entries per transfer - and (a) legs balance per transfer
         long totalDebits = 0;
         long totalCredits = 0;
         for (UUID transferId : transferIds) {

@@ -21,8 +21,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
- * Transfer endpoints. Header extraction + validation + status mapping only —
- * no business logic, no {@code @Transactional} (§7.1).
+ * Transfer endpoints. Header extraction, validation, and status mapping only,
+ * keeping business logic and transaction boundaries in the service layer.
  */
 @RestController
 @Tag(name = "Transfers", description = "Idempotent double-entry transfers")

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Audit consumer (Week 7). Dedupe rule §7.5: the `processed_events` insert
- * with `ON CONFLICT DO NOTHING` happens **in the same transaction** as the
- * side effect (the audit row). `eventId` is the dedupe key — never
- * `transferId` — so at-least-once delivery yields exactly-once effect.
+ * Audit consumer. Deduplication rule: inserting into `processed_events`
+ * with `ON CONFLICT DO NOTHING` executes within the same database transaction as the
+ * side effect (the audit log row). `eventId` acts as the deduplication key so
+ * at-least-once message delivery produces an exactly-once side effect.
  */
 @Component
 public class AuditConsumer {
@@ -63,7 +63,7 @@ public class AuditConsumer {
 
         int inserted = processedEvents.recordProcessed(eventId, CONSUMER);
         if (inserted == 0) {
-            log.info("event {} already processed — skipping side effect (§7.5)", eventId);
+            log.info("event {} already processed - skipping side effect", eventId);
             return;
         }
 

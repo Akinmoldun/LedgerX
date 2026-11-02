@@ -10,10 +10,9 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * A double-entry leg of a transfer. Immutable after insert — balances are the
- * only mutable state; entries are the audit-ready record (P2). Rows are
- * inserted in ONE statement by {@link EntryRepository#insertTransferEntries}
- * (Week 3 self-check).
+ * A double-entry leg of a transfer. Immutable after insert: account balances reflect
+ * accumulated state while immutable entries preserve the complete double-entry audit trail.
+ * Rows are inserted atomically by {@link EntryRepository#insertTransferEntries}.
  */
 @Entity
 @Table(name = "entries")

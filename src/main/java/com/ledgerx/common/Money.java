@@ -2,8 +2,8 @@ package com.ledgerx.common;
 
 /**
  * Value object for monetary amounts. Money is always stored and moved as
- * {@code long} minor units plus an ISO-4217 currency code — never any
- * arbitrary-precision or floating-point type (spec P1 / §2.3).
+ * {@code long} minor units plus an ISO-4217 currency code: never any
+ * arbitrary-precision or floating-point type to eliminate precision and rounding errors.
  */
 public record Money(long minor, String currency) {
 

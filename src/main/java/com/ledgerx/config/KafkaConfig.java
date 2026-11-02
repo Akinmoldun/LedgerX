@@ -8,10 +8,9 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Kafka + scheduling wiring (§5 config/). Scheduling backs the `@Scheduled`
- * outbox relay; `@EnableKafka` backs the consumer listeners. Both a `Clock`
- * bean (deterministic time for the relay, §7.4) and the declared topic
- * (compose disables auto topic creation) must exist at startup.
+ * Kafka and scheduling configuration. Scheduling drives the background outbox relay,
+ * while Kafka listeners consume topic events. The Clock bean supports testable,
+ * deterministic time calculations, and the NewTopic bean ensures the topic exists at startup.
  */
 @Configuration
 @EnableScheduling
@@ -29,7 +28,7 @@ public class KafkaConfig {
         return Clock.systemUTC();
     }
 
-    /** Topic contract §8: 3 partitions, key = transferId, cleanup = delete. */
+    /** Configures transfer posted topic with 3 partitions and replication factor 1. */
     @Bean
     org.apache.kafka.clients.admin.NewTopic transferPostedTopic() {
         return org.springframework.kafka.config.TopicBuilder.name(topic).partitions(3).replicas(1).build();

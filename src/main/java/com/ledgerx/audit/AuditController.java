@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Audit read endpoints (§9, Week 9).
+ * Audit read endpoints.
  * GET /api/v1/audit?entityId=...&limit=100
  * Pagination: ?limit (max 200, default 50) + ?cursor (base64 of last id). No offset.
- * Controllers do validation, header extraction, HTTP status and DTO mapping only —
- * no business logic, no @Transactional (§7.1).
+ * Controllers do validation, header extraction, HTTP status, and DTO mapping only.
  */
 @RestController
 @Tag(name = "Audit", description = "Immutable audit log query endpoints")

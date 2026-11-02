@@ -15,10 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Week 3 AC: one POST → 1 transfer (posted), 2 entries, both balances
- * changed; the `entries_balanced` trigger rejects an unbalanced manual
- * insert. Skips cleanly when Docker is absent (see base class) and always
- * runs on a Docker machine.
+ * Transfer API integration tests: one POST generates 1 posted transfer, 2 entries,
+ * updates both balances, and verifies the entries_balanced trigger rejects unbalanced inserts.
  */
 class TransferApiIT extends AbstractIntegrationTest {
 
@@ -82,7 +80,7 @@ class TransferApiIT extends AbstractIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNPROCESSABLE_ENTITY);
         assertThat(response.getBody()).isNotNull();
         assertThat(response.getBody().get("error")).isEqualTo("INSUFFICIENT_FUNDS");
-        // nothing persisted — rolled back at step 4 of §7.3
+        // nothing persisted: rolled back upon insufficient funds
         assertThat(jdbc.queryForObject("SELECT count(*) FROM transfers WHERE idempotency_key = ?",
                 Integer.class, idempotencyKey)).isZero();
         assertThat(balance(fromId)).isEqualTo(100);

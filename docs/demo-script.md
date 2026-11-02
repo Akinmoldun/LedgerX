@@ -1,4 +1,4 @@
-# LedgerX — 2-Minute Demo Video Recording Script
+# LedgerX - 2-Minute Demo Video Recording Script
 
 This script provides an exact, top-to-bottom walkthrough to record a 2-minute product demonstration of LedgerX.
 All commands use the live Fly.io deployment (`https://ledgerx.fly.dev`). You can also substitute `http://localhost:8080` if demonstrating locally.

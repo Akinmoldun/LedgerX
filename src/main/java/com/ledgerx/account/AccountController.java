@@ -14,8 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Account read endpoints. Controllers do validation, header extraction, HTTP
- * status and DTO mapping only — no business logic, no {@code @Transactional}
- * (§7.1).
+ * status, and DTO mapping only without hosting transaction boundaries or business logic.
  */
 @RestController
 @Tag(name = "Accounts", description = "Chart-of-accounts read endpoints")

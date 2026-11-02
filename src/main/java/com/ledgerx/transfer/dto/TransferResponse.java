@@ -4,7 +4,7 @@ import com.ledgerx.transfer.Transfer;
 import java.time.Instant;
 import java.util.UUID;
 
-/** Response record — the entity never leaves the service layer (§16). */
+/** Response record: represents transfer data across API boundaries without exposing entities. */
 public record TransferResponse(
         UUID id,
         UUID tenantId,

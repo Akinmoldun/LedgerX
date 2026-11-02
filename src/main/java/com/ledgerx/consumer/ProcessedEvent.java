@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 
-/** One consumed event — dedupe record for exactly-once effect (§7.5). */
+/** One consumed event: deduplication record for idempotent consumer processing. */
 @Entity
 @Table(name = "processed_events")
 public class ProcessedEvent {

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface EntryRepository extends JpaRepository<Entry, UUID> {
 
     /**
-     * Both legs of a transfer inserted in ONE statement (Week 3 self-check).
+     * Both legs of a transfer inserted in a single statement.
      * Deferrable constraint trigger {@code entries_balanced} evaluates at COMMIT.
      */
     @Modifying

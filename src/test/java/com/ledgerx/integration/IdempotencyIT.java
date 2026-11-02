@@ -14,9 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Week 4 AC (§12 test #1): same key twice → same ID, one entry pair.
- * Also covers 409 key reuse with a different body and the required
- * Idempotency-Key header enforcement.
+ * Idempotency integration tests: repeating the same key returns the original transfer
+ * with a single entry pair. Also covers 409 conflict when a key is reused with a different
+ * payload, and enforces the required Idempotency-Key header.
  */
 class IdempotencyIT extends AbstractIntegrationTest {
 

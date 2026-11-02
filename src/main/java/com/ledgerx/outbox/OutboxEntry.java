@@ -11,7 +11,7 @@ import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-/** One outbound publish — written in the same transaction as the triggering state change (P5). */
+/** One outbound publish record written in the same transaction as the triggering state change. */
 @Entity
 @Table(name = "outbox")
 public class OutboxEntry {
@@ -110,13 +110,13 @@ public class OutboxEntry {
         return nextAttemptAt;
     }
 
-    /** Only called after the Kafka publish actually succeeded (§7.4). */
+    /** Marks entry published after successful broker acknowledgment. */
     public void markPublished(Instant publishedAt) {
         this.publishedAt = publishedAt;
         this.attempts++;
     }
 
-    /** Called when the relay gives up for now; the relay must stop retrying immediately (§7.4). */
+    /** Records publish failure details for observability and backoff tracking. */
     public void recordFailure(String lastError) {
         this.lastError = lastError;
     }

@@ -16,14 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Week 9 AC (§12 test #5):
- * 1. Corrupt one balance manually → reconcile flags exactly that account
+ * Reconciliation integration tests:
+ * 1. Corrupt one balance manually -> reconcile flags exactly that account
  * 2. Audit API returns correct rows for a transfer
  */
 class ReconciliationIT extends AbstractIntegrationTest {
 
     @Test
-    @DisplayName("Corrupt one balance manually → reconcile flags exactly that account")
+    @DisplayName("Corrupt one balance manually: reconcile flags exactly that account")
     void corruptBalanceDetectedByReconcile() {
         UUID fund = account("REC-FUND", 1_000_000); // money source; its own balance isn't under test
         UUID a = account("REC-A", 0);

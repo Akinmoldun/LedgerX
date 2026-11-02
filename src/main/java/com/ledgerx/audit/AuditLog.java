@@ -12,8 +12,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 /**
- * Audit trail row (P8) — written inside the same transaction as the state
- * change it records. Immutable after insert; the audit API (Week 9) reads it.
+ * Audit trail row: written inside the same transaction as the state
+ * change it records. Immutable after insert; exposed via audit read endpoints.
  */
 @Entity
 @Table(name = "audit_log")
@@ -84,7 +84,7 @@ public class AuditLog {
                 null, afterJson, reason, requestId);
     }
 
-    /** Audit row written by the Week 7 consumer as its side effect. */
+    /** Audit row written by the event consumer as its side effect. */
     public static AuditLog forTransferConsumed(UUID tenantId, UUID transferId, String afterJson, String reason) {
         return new AuditLog(tenantId, null, "TRANSFER_POSTED_CONSUMED", "TRANSFER", transferId,
                 null, afterJson, reason, null);

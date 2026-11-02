@@ -7,9 +7,8 @@ import jakarta.validation.constraints.Positive;
 import java.util.UUID;
 
 /**
- * Request body for POST /api/v1/transfers (§9). Client amount/currency are
- * never trusted — validated here AND again server-side via {@code Money}
- * inside {@code TransferService} (§2.3).
+ * Request body for POST /api/v1/transfers. Client amount and currency are
+ * validated upon entry and checked again inside {@code TransferService}.
  */
 public record CreateTransferRequest(
         @NotNull UUID fromAccountId,

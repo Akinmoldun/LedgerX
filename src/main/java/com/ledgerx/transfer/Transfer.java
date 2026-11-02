@@ -16,7 +16,7 @@ import org.hibernate.type.SqlTypes;
 /**
  * Transfer aggregate. Money fields are set once at creation via the
  * constructor; the only state mutation is {@link #markPosted()}. A transfer is
- * only returned to the client as {@code posted} after the DB commit (§2.3) —
+ * only returned to the client as {@code posted} after the database commit:
  * the controller maps HTTP status after {@code post()} returns and Spring
  * committed the transaction.
  */
@@ -70,7 +70,7 @@ public class Transfer {
         this.createdAt = Instant.now();
     }
 
-    /** Step 11 — flips pending → posted exactly once. */
+    /** Step 11 - flips pending → posted exactly once. */
     public void markPosted() {
         if (status != TransferStatus.pending) {
             throw new IllegalStateException("transfer already " + status.getDbValue());

@@ -16,8 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 /**
- * Week 10 AC verification test:
- * Validates that /actuator/prometheus exposes the §10 metrics and that
+ * Observability integration tests:
+ * Validates that /actuator/prometheus exposes custom business metrics and that
  * the RequestIdMdcFilter sets the X-Request-Id header on HTTP responses.
  */
 @SpringBootTest(
@@ -80,7 +80,7 @@ class ObservabilityIT extends AbstractIntegrationTest {
         String body = promResponse.getBody();
         assertThat(body).isNotNull();
 
-        // Verify §10 metric names appear in the Prometheus output
+        // Verify custom metric names appear in the Prometheus output
         assertThat(body).contains("ledgerx_transfer_posted");
         assertThat(body).contains("ledgerx_outbox_pending");
         assertThat(body).contains("ledgerx_reconcile_mismatches");

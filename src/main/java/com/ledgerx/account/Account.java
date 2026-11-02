@@ -16,10 +16,10 @@ import org.hibernate.type.SqlTypes;
 
 /**
  * Account aggregate. Financial fields are mutated only through intent methods
- * ({@link #credit(long)}, {@link #debit(long)}) — there are no setters for
- * {@code balanceMinor} or {@code currency} (§7.1). {@link #version} backs the
- * optimistic lock; pessimistic row locking arrives via
- * {@code AccountRepository.lockByIdsOrdered} (P6/P7).
+ * ({@link #credit(long)}, {@link #debit(long)}) - there are no setters for
+ * {@code balanceMinor} or {@code currency} to preserve domain invariants. {@link #version} backs
+ * optimistic concurrency checks, while pessimistic row locking in deterministic ID order
+ * prevents deadlocks during concurrent transfers.
  */
 @Entity
 @Table(name = "accounts")

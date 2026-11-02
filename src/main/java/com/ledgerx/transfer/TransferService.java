@@ -65,11 +65,11 @@ public class TransferService {
     }
 
     /**
-     * Exact shape of §7.3. Steps 8 (ledger_event), 9 (outbox) and 10 (audit_log)
-     * are executed inside the same transaction. Any step throwing
-     * rolls the whole transaction back; Kafka being unreachable cannot make a
-     * transfer fail (relays are the only publishers, P5).
-     * Metrics (§10):
+     * Executes transfer processing in a single atomic transaction. Ledger events,
+     * outbox rows, and audit logs are persisted within the same transaction.
+     * Kafka is never called inside the transfer transaction: the transactional outbox
+     * decouples database state transitions from message broker delivery.
+     * Metrics:
      * - ledgerx.transfer.posted (counter, tag currency)
      * - ledgerx.transfer.failed (counter, tag reason)
      * - ledgerx.transfer.post.duration (timer)
@@ -111,7 +111,7 @@ public class TransferService {
     }
 
     private TransferPostResult doProcessPost(UUID tenantId, CreateTransferRequest req, String idempotencyKey) {
-        // 1) Fast path — idempotent replay returns the ORIGINAL result and exits
+        // 1) Fast path - idempotent replay returns the ORIGINAL result and exits
         Optional<Transfer> existing =
                 transfers.findByTenantIdAndIdempotencyKey(tenantId, idempotencyKey);
         if (existing.isPresent()) {
@@ -128,7 +128,7 @@ public class TransferService {
         if (req.fromAccountId().equals(req.toAccountId())) {
             throw new SelfTransferException("from and to accounts must differ");
         }
-        // 3) Lock both accounts in deterministic order (P6) BEFORE reading them.
+        // Lock both accounts in deterministic ID order to prevent deadlocks before reading.
         Map<UUID, Account> locked = accounts
                 .lockByIdsOrdered(List.of(req.fromAccountId(), req.toAccountId())).stream()
                 .collect(Collectors.toMap(Account::getId, Function.identity()));
@@ -144,23 +144,23 @@ public class TransferService {
             throw new CurrencyMismatchException("transfer currency must match both accounts");
         }
 
-        // 4) Funds check (unless allow_overdraft) — on the locked row
+        // Funds check on the locked row (unless overdraft is allowed)
         if (!from.isAllowOverdraft() && from.getBalanceMinor() < req.amountMinor()) {
             throw new InsufficientFundsException("account " + from.getId() + " has insufficient funds");
         }
 
-        // 5) Insert transfer (status=pending) — unique constraint protects idempotency (P4)
+        // Insert transfer with status=pending; database unique constraint guards idempotency
         Transfer t = new Transfer(tenantId, idempotencyKey, req.currency(), req.amountMinor(), req.description());
         transfers.save(t);
 
-        // 6) Insert 2 entries (trigger checks balance at COMMIT) — one statement
+        // Insert debit and credit entries atomically; trigger checks balance at commit
         entries.insertTransferEntries(t.getId(), from.getId(), to.getId(), req.amountMinor());
 
-        // 7) Mutate balances via intent methods
+        // Mutate account balances via domain intent methods
         from.debit(req.amountMinor());
         to.credit(req.amountMinor());
 
-        // 11) Mark posted
+        // Mark transfer posted
         t.markPosted();
 
         UUID eventId = UUID.randomUUID();
@@ -174,7 +174,7 @@ public class TransferService {
                 "status", t.getStatus().getDbValue(),
                 "postedAt", t.getPostedAt().toString()));
 
-        // 8) Append ledger_event — same @Transactional (Week 5)
+        // Append immutable ledger event log entry in the same transaction
         ledgerEvents.save(new LedgerEvent(
                 tenantId,
                 "transfer",
@@ -183,7 +183,7 @@ public class TransferService {
                 "TransferPosted",
                 payload));
 
-        // 9) Insert outbox row — same @Transactional (§7.3); relay publishes it (P5)
+        // Insert outbox entry in the same transaction for asynchronous relay publishing
         outbox.save(new OutboxEntry(
                 "transfer",
                 t.getId(),
@@ -192,7 +192,7 @@ public class TransferService {
                 jsonOf(Map.of("eventId", eventId.toString(),
                               "schema", "ledgerx.transfer.posted.v1"))));
 
-        // 10) Insert audit_log row — same @Transactional (P8; Week 5)
+        // Insert audit log row in the same transaction
         auditLogs.save(AuditLog.forTransferPosted(
                 tenantId,
                 t.getId(),

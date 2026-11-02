@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface LedgerEventRepository extends JpaRepository<LedgerEvent, UUID> {
 
-    /** Next per-aggregate sequence = max + 1 within the current transaction (Week 5 self-check). */
+    /** Calculates current max sequence for an aggregate within the transaction to generate the next monotonic sequence. */
     @Query(value = """
         SELECT coalesce(max(sequence), 0) FROM ledger_events
         WHERE aggregate_type = :aggregateType AND aggregate_id = :aggregateId

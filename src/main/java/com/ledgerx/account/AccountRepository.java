@@ -10,8 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     /**
-     * All accounts for a tenant. Native query with explicit columns — `SELECT *`
-     * is banned (§2.3).
+     * All accounts for a tenant. Native query with explicit columns to prevent schema drift.
      */
     @Query(value = """
         SELECT id, tenant_id, code, name, type, currency, balance_minor,
@@ -24,7 +23,7 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
     Optional<Account> findByIdAndTenantId(UUID id, UUID tenantId);
 
     /**
-     * Pessimistic row lock taken in deterministic ID order (P6) so concurrent
+     * Pessimistic row lock taken in deterministic ID order so concurrent
      * transfers that share an account always acquire locks in the same order
      * and never deadlock.
      */

@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Admin reconciliation endpoint (§9, Week 9).
- * No business logic, no @Transactional on the controller (§7.1).
+ * Admin reconciliation endpoint for detecting ledger mismatches.
  */
 @RestController
 @Tag(name = "Reconciliation", description = "Balance reconciliation endpoints")

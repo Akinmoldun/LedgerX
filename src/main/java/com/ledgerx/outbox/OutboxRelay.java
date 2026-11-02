@@ -16,13 +16,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Transactional outbox relay (§7.4 + Week 8). Zero {@code kafka.send}
- * outside this package (P5): the only Kafka producer call in the codebase
- * lives here. Kafka failure never fails a transfer — the transfer already
- * committed (steps 1–11 of §7.3 succeeded), the row sits in {@code outbox},
- * and the relay retries with exponential backoff (§13 Week 8).
+ * Transactional outbox relay. All Kafka publishing in the application is
+ * consolidated in this component. Broker unavailability never causes a transfer to fail:
+ * the transfer transaction commits before publishing begins, and the relay polls the
+ * outbox table to publish asynchronously with exponential backoff.
  *
- * <p>Week 8 backoff: persisted via V8 {@code next_attempt_at} column.
+ * <p>Retry backoff is persisted via the {@code next_attempt_at} column.
  * On failure, {@code next_attempt_at = now() + min(attempts^2 seconds, 5 minutes)}.
  * {@code lockNextBatch} skips rows where {@code next_attempt_at > now()},
  * surviving relay crashes and restarts with zero in-memory state.
@@ -107,7 +106,7 @@ public class OutboxRelay {
                     log.warn("outbox publish failed for {} {}: {} (attempts {})",
                             e.getEventType(), e.getAggregateId(), describe(ex),
                             e.getAttempts() + 1);
-                    return; // broker likely down — retry on later ticks (§7.4 shape)
+                    return; // broker down or slow: retry on later polling cycles
                 }
             }
         }

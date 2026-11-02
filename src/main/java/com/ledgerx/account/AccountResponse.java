@@ -3,7 +3,7 @@ package com.ledgerx.account;
 import java.time.Instant;
 import java.util.UUID;
 
-/** API response record — never exposes the raw entity (§16). */
+/** API response record: never exposes the raw entity across API boundaries. */
 public record AccountResponse(
         UUID id,
         String code,
