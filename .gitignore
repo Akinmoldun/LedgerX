@@ -26,3 +26,7 @@ run*.log
 verify*.log
 phase-*.log
 *.patch
+
+# Internal workflow, not for GitHub
+PROGRESS*.md
+docs/LedgerX_BUILD_SPEC.md
