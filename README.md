@@ -114,7 +114,8 @@ All endpoints reside under `/api/v1` and return standardized JSON contracts:
 
 ### Admin Balance Reconciliation
 `POST /api/v1/admin/reconcile`
-- Scans all accounts, verifies `accounts.balance_minor == sum(entries)`, logs mismatch audit records, and updates the `ledgerx.reconcile.mismatches` gauge.
+- Headers: `X-Admin-Key: <admin-api-key>`, `X-Tenant-Id: <tenant-uuid>`
+- Scans all accounts for the specified tenant, verifies `accounts.balance_minor == sum(entries)`, logs mismatch audit records, and updates the `ledgerx.reconcile.mismatches` gauge. Protected by `ADMIN_API_KEY` (returns 401 Unauthorized if missing or invalid).
 
 ---
 

@@ -91,8 +91,36 @@ class ReconciliationIT extends AbstractIntegrationTest {
     private ResponseEntity<ReconciliationResponse> postReconcile() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("X-Tenant-Id", DEFAULT_TENANT);
+        headers.set("X-Admin-Key", "ledgerx-admin-dev-key");
         return rest.exchange("/api/v1/admin/reconcile", HttpMethod.POST,
                 new HttpEntity<>(headers), ReconciliationResponse.class);
+    }
+
+    @Test
+    @DisplayName("Reconcile requires valid X-Admin-Key header, returns 401 otherwise")
+    void reconcileRequiresAdminKey() {
+        HttpHeaders noKeyHeaders = new HttpHeaders();
+        noKeyHeaders.set("X-Tenant-Id", DEFAULT_TENANT);
+        ResponseEntity<Map> noKey = rest.exchange(
+                "/api/v1/admin/reconcile", HttpMethod.POST, new HttpEntity<>(noKeyHeaders), Map.class);
+        assertThat(noKey.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        HttpHeaders wrongKeyHeaders = new HttpHeaders();
+        wrongKeyHeaders.set("X-Tenant-Id", DEFAULT_TENANT);
+        wrongKeyHeaders.set("X-Admin-Key", "wrong-secret-key");
+        ResponseEntity<Map> wrongKey = rest.exchange(
+                "/api/v1/admin/reconcile", HttpMethod.POST, new HttpEntity<>(wrongKeyHeaders), Map.class);
+        assertThat(wrongKey.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
+    @Test
+    @DisplayName("Reconcile requires explicit X-Tenant-Id header, returns 400 when missing")
+    void reconcileRequiresTenantId() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("X-Admin-Key", "ledgerx-admin-dev-key");
+        ResponseEntity<Map> response = rest.exchange(
+                "/api/v1/admin/reconcile", HttpMethod.POST, new HttpEntity<>(headers), Map.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<TransferResponse> postTransfer(UUID fromId, UUID toId, long amountMinor, String description) {
