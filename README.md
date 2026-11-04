@@ -148,7 +148,7 @@ curl -s http://localhost:8080/actuator/health
 
 | Test Class | Focus Area |
 |---|---|
-| `TransferApiIT` | Double-entry transaction creation, funds validation, balance trigger enforcement |
+| `TransferApiIT` | Double-entrys transaction creation, funds validation, balance trigger enforcement |
 | `IdempotencyIT` | Exact-match idempotency replay and payload tampering conflict detection |
 | `ConcurrencyIT` | 100 parallel cross-account transfers verifying zero deadlocks and balance invariant |
 | `OutboxRelayIT` | Kafka broker downtime simulation, durable exponential backoff, and recovery |
