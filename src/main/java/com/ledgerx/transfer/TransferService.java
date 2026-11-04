@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -209,6 +210,20 @@ public class TransferService {
         Transfer t = transfers.findByIdAndTenantId(transferId, tenantId)
                 .orElseThrow(() -> new EntityNotFoundException("transfer not found: " + transferId));
         return TransferResponse.from(t);
+    }
+
+    /**
+     * Replays a transfer after a concurrent insert race condition caused a unique constraint violation.
+     */
+    @Transactional(readOnly = true)
+    public TransferPostResult replayAfterConflict(UUID tenantId, CreateTransferRequest req, String idempotencyKey) {
+        Optional<Transfer> existing = transfers.findByTenantIdAndIdempotencyKey(tenantId, idempotencyKey);
+        if (existing.isPresent()) {
+            Transfer same = existing.get();
+            ensureSameIntent(tenantId, req, same);
+            return new TransferPostResult(TransferResponse.from(same), false);
+        }
+        throw new DataIntegrityViolationException("Unique constraint violation on idempotency key: " + idempotencyKey);
     }
 
     /**

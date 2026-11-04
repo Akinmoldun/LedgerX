@@ -3,14 +3,22 @@ package com.ledgerx.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.ledgerx.transfer.dto.TransferResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -86,6 +94,40 @@ class IdempotencyIT extends AbstractIntegrationTest {
                 Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("concurrent identical requests with same key: one 201, one 200, no 500")
+    void concurrentIdenticalRequestsBothSucceed() throws Exception {
+        UUID fromId = account("7700", 100000);
+        UUID toId = account("8700", 0);
+        String key = freshKey();
+
+        CountDownLatch startGate = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(2);
+
+        Callable<ResponseEntity<TransferResponse>> task = () -> {
+            startGate.await();
+            return post(fromId, toId, AMOUNT, "concurrent idempotency test", key);
+        };
+
+        Future<ResponseEntity<TransferResponse>> f1 = pool.submit(task);
+        Future<ResponseEntity<TransferResponse>> f2 = pool.submit(task);
+
+        startGate.countDown();
+
+        ResponseEntity<TransferResponse> r1 = f1.get(10, TimeUnit.SECONDS);
+        ResponseEntity<TransferResponse> r2 = f2.get(10, TimeUnit.SECONDS);
+        pool.shutdown();
+
+        List<HttpStatusCode> statuses = List.of(r1.getStatusCode(), r2.getStatusCode());
+        assertThat(statuses).containsExactlyInAnyOrder(HttpStatus.CREATED, HttpStatus.OK);
+        assertThat(r1.getBody()).isNotNull();
+        assertThat(r2.getBody()).isNotNull();
+        assertThat(r1.getBody().id()).isEqualTo(r2.getBody().id());
+
+        assertThat(balance(fromId)).isEqualTo(100000 - AMOUNT);
+        assertThat(balance(toId)).isEqualTo(AMOUNT);
     }
 
     private ResponseEntity<TransferResponse> post(UUID fromId, UUID toId, long amountMinor, String description, String key) {

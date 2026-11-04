@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +44,13 @@ public class TransferController {
             @RequestHeader("X-Tenant-Id")
             @Parameter(description = "Tenant id", required = true) String tenantId,
             @Valid @RequestBody CreateTransferRequest request) {
-        TransferPostResult result = transfers.post(
-                parseUuid(tenantId, "X-Tenant-Id"), request, idempotencyKey);
+        UUID tenantUuid = parseUuid(tenantId, "X-Tenant-Id");
+        TransferPostResult result;
+        try {
+            result = transfers.post(tenantUuid, request, idempotencyKey);
+        } catch (DataIntegrityViolationException ex) {
+            result = transfers.replayAfterConflict(tenantUuid, request, idempotencyKey);
+        }
         if (result.created()) {
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                     .path("/{id}").buildAndExpand(result.transfer().id()).toUri();
