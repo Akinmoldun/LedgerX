@@ -1,6 +1,7 @@
 package com.ledgerx.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.ledgerx.LedgerXApplication;
 import com.ledgerx.transfer.TransferService;
@@ -12,6 +13,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.sql.DataSource;
+import net.jqwik.api.Example;
 import net.jqwik.api.ForAll;
 import net.jqwik.api.Property;
 import net.jqwik.api.constraints.IntRange;
@@ -19,6 +21,7 @@ import net.jqwik.api.lifecycle.AfterContainer;
 import net.jqwik.api.lifecycle.BeforeContainer;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.testcontainers.containers.PostgreSQLContainer;
 
@@ -110,6 +113,36 @@ class TransferInvariantsIT {
         // (b) sum of balances across all accounts is invariant
         long finalSum = pool.stream().mapToLong(this::balance).sum();
         assertThat(finalSum).isEqualTo(initialSum);
+    }
+
+    @Example
+    void entriesAndAuditLogRejectMutations() {
+        UUID entryId = jdbc.queryForObject("SELECT id FROM entries LIMIT 1", UUID.class);
+        if (entryId != null) {
+            assertThatThrownBy(() ->
+                    jdbc.update("UPDATE entries SET amount_minor = 9999 WHERE id = ?::uuid", entryId.toString()))
+                    .isInstanceOf(DataAccessException.class);
+
+            assertThatThrownBy(() ->
+                    jdbc.update("DELETE FROM entries WHERE id = ?::uuid", entryId.toString()))
+                    .isInstanceOf(DataAccessException.class);
+        }
+
+        jdbc.update("""
+                INSERT INTO audit_log (tenant_id, action, entity_type, reason)
+                VALUES (?::uuid, 'TEST_IMMUTABLE', 'TEST_ENTITY', 'Testing append-only triggers')
+                """, AbstractIntegrationTest.DEFAULT_TENANT);
+
+        Long auditId = jdbc.queryForObject(
+                "SELECT id FROM audit_log WHERE action = 'TEST_IMMUTABLE' LIMIT 1", Long.class);
+
+        assertThatThrownBy(() ->
+                jdbc.update("UPDATE audit_log SET reason = 'tampered' WHERE id = ?", auditId))
+                .isInstanceOf(DataAccessException.class);
+
+        assertThatThrownBy(() ->
+                jdbc.update("DELETE FROM audit_log WHERE id = ?", auditId))
+                .isInstanceOf(DataAccessException.class);
     }
 
     private UUID account(long balanceMinor) {
