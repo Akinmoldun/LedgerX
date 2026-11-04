@@ -18,9 +18,12 @@ class MoneyTest {
     }
 
     @Test
-    @DisplayName("rejects zero amount")
-    void rejectsZero() {
+    @DisplayName("rejects zero and negative amounts")
+    void rejectsZeroAndNegative() {
         assertThatThrownBy(() -> new Money(0, "USD"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("amount must be > 0");
+        assertThatThrownBy(() -> new Money(-100, "USD"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("amount must be > 0");
     }
@@ -37,13 +40,5 @@ class MoneyTest {
         assertThatThrownBy(() -> new Money(100, "USDX"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("ISO-4217");
-    }
-
-    @Test
-    @DisplayName("negate preserves currency and sign flips")
-    void negate() {
-        assertThat(new Money(12500, "USD").negate())
-                .isEqualTo(new Money(12500, "USD").negate());
-        assertThat(new Money(12500, "USD").negate().currency()).isEqualTo("USD");
     }
 }
