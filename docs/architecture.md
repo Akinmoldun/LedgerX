@@ -67,7 +67,8 @@ To guarantee high resilience during Kafka outages without memory loss or retry s
   $$\text{next\_attempt\_at} = \text{now}() + \min(\text{attempts}^2 \text{ seconds}, 300\text{s})$$
 - `OutboxRepository.lockNextBatch` queries:
   ```sql
-  SELECT * FROM outbox
+  SELECT id, aggregate_type, aggregate_id, event_type, payload, headers, created_at, published_at, attempts, last_error, next_attempt_at
+    FROM outbox
    WHERE published_at IS NULL
      AND (next_attempt_at IS NULL OR next_attempt_at <= now())
    ORDER BY created_at

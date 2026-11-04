@@ -95,7 +95,8 @@ If you run multiple instances of your application, multiple outbox pollers will 
 Instead of external distributed locks (like Redis/Redlock), LedgerX uses PostgreSQL's native row locking:
 
 ```sql
-SELECT * FROM outbox
+SELECT id, aggregate_type, aggregate_id, event_type, payload, headers, created_at, published_at, attempts, last_error, next_attempt_at
+FROM outbox
 WHERE published_at IS NULL
   AND next_attempt_at <= NOW()
 ORDER BY created_at ASC

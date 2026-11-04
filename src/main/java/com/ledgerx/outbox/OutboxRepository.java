@@ -17,12 +17,13 @@ public interface OutboxRepository extends JpaRepository<OutboxEntry, UUID> {
      * locked rows are skipped by other concurrent relay instances.
      */
     @Query(value = """
-        SELECT * FROM outbox
-         WHERE published_at IS NULL
-           AND (next_attempt_at IS NULL OR next_attempt_at <= now())
-         ORDER BY created_at
-         LIMIT :limit
-         FOR UPDATE SKIP LOCKED
+        SELECT id, aggregate_type, aggregate_id, event_type, payload, headers, created_at, published_at, attempts, last_error, next_attempt_at
+        FROM outbox
+        WHERE published_at IS NULL
+          AND (next_attempt_at IS NULL OR next_attempt_at <= now())
+        ORDER BY created_at
+        LIMIT :limit
+        FOR UPDATE SKIP LOCKED
         """, nativeQuery = true)
     List<OutboxEntry> lockNextBatch(@Param("limit") int limit);
 
